@@ -4,7 +4,7 @@ const coinImage = document.querySelector('.coin-image');
 let coinsPerClick = 1; // Coins earned per click
 const feedbackQueue = [];
 
-// Function to handle feedback creation
+// Function to create feedback for the user
 function createFeedback(x, y, amount) {
     const feedback = document.createElement('div');
     feedback.className = 'feedback';
@@ -18,44 +18,38 @@ function createFeedback(x, y, amount) {
         feedback.classList.add('show');
     });
 
-    // Remove the feedback element after animation
+    // Remove the feedback element after a set duration
     setTimeout(() => {
         feedback.remove(); // Remove without fading
-    }, 600); // Match the duration of the animation
+    }, 600); // Duration to match the animation
 }
 
-// Touch event listener
-coinContainer.addEventListener('touchstart', (event) => {
-    coinClicked(event);
-});
-
-// Click event listener for testing
-coinContainer.addEventListener('click', (event) => {
-    coinClicked(event);
-});
-
+// Function to handle coin click/touch events
 function coinClicked(event) {
     event.preventDefault();
+    
     const touches = event.touches || [{ clientX: event.clientX, clientY: event.clientY }];
-
-    // Add the clicked class for animation
+    
+    // Add the clicked class for image animation
     coinImage.classList.add('clicked');
 
     // Remove the clicked class after the animation duration
     setTimeout(() => {
         coinImage.classList.remove('clicked');
-    }, 100); // Match the CSS transition duration
-     
-    batchFeedback(touches, coinsPerClick); // Batch feedback animations
+    }, 100); // Duration to match the CSS transition
+
+    batchFeedback(touches, coinsPerClick); // Handle feedback animations
 }
 
+// Function to batch feedback for multiple touches
 function batchFeedback(touches, amount) {
     for (const touch of touches) {
         feedbackQueue.push({ x: touch.clientX, y: touch.clientY, amount });
     }
 
-    if (!feedbackQueue.length) return;
+    if (feedbackQueue.length === 0) return;
 
+    // Use requestAnimationFrame for better performance
     requestAnimationFrame(() => {
         const feedbacks = feedbackQueue.splice(0, feedbackQueue.length); // Clear the queue
         feedbacks.forEach(feedback => {
@@ -63,3 +57,7 @@ function batchFeedback(touches, amount) {
         });
     });
 }
+
+// Event listeners for touch and click interactions
+coinContainer.addEventListener('touchstart', coinClicked);
+coinContainer.addEventListener('click', coinClicked);
