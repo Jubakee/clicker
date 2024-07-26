@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hideAllTabs();
       const selectedTab = document.getElementById(tabId);
       if (selectedTab) {
-          selectedTab.style.display = "block";
+          selectedTab.style.display = "flex"; // Change to "flex" for proper centering
       }
   }
 

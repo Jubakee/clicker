@@ -1,10 +1,11 @@
+/* base.css */
+
 body {
     background-color: black;
     display: flex;
     justify-content: center;
     font-family: 'Arial', sans-serif;
     color: white;
-    font-weight: bold;
     margin: 0;
     padding: 0;
 }
@@ -26,8 +27,8 @@ body {
     z-index: 10;
     background-color: #fff;
     color: #000;
-    border-bottom: 2px solid #ddd; /* Line below header */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    border-bottom: 2px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .main-content {
@@ -35,7 +36,29 @@ body {
     background-color: #fff;
     color: #000;
     position: relative;
-    padding: 16px; /* Add padding for content */
+    padding: 16px;
+    display: flex; /* Added for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.tab-content {
+    display: flex; /* Enable flexbox */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    height: 100%; /* Fill the entire height */
+}
+
+.coin-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.coin-image {
+    width: 100px; /* Adjust size as needed */
+    height: auto; /* Maintain aspect ratio */
 }
 
 .footer {
@@ -44,42 +67,38 @@ body {
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    max-width: 768px; /* Maintain max width for larger screens */
+    max-width: 768px;
     background-color: #fff;
     color: #000;
-    border-top: 2px solid #ddd; /* Line below footer */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    border-top: 2px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 12px; /* Uniform padding for touch targets */
+    padding: 12px;
     z-index: 50;
-    font-size: 14px; /* Adjust font size for readability */
-    height: 60px; /* Adjusted height for a compact mobile look */
+    font-size: 14px;
+    height: 60px;
 }
 
 .footer-item {
-    display: flex; /* Use flexbox for better alignment */
-    flex-direction: column; /* Stack icon and text vertically */
-    align-items: center; /* Center the items */
-    color: #333; /* Darker color for better contrast */
-    transition: transform 0.2s; /* Smooth hover effect */
-    text-align: center; /* Center text for better alignment */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+    transition: transform 0.2s;
+    text-align: center;
 }
 
 .footer-icon {
-    width: 30px; /* Slightly larger icon size for better touch targets */
-    height: 30px; /* Slightly larger icon size for better touch targets */
-    margin-bottom: 4px; /* Space between icon and text */
+    width: 30px;
+    height: 30px;
+    margin-bottom: 4px;
 }
 
 .footer-item p {
-    margin: 0; /* Remove default margin */
-    font-size: 12px; /* Smaller text for better hierarchy */
-}
-
-.footer-item:hover {
-    transform: scale(1.1); /* Scale on hover for interaction */
+    margin: 0;
+    font-size: 12px;
 }
 
 .tab-content {
