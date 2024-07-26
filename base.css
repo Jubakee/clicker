@@ -1,0 +1,87 @@
+body {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    color: white;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 768px;
+    background-color: black;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 16px;
+    z-index: 10;
+    background-color: #fff;
+    color: #000;
+    border-bottom: 2px solid #ddd; /* Line below header */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+.main-content {
+    flex-grow: 1;
+    background-color: #fff;
+    color: #000;
+    position: relative;
+    padding: 16px; /* Add padding for content */
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 768px; /* Maintain max width for larger screens */
+    background-color: #fff;
+    color: #000;
+    border-top: 2px solid #ddd; /* Line below footer */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px; /* Uniform padding for touch targets */
+    z-index: 50;
+    font-size: 14px; /* Adjust font size for readability */
+    height: 60px; /* Adjusted height for a compact mobile look */
+}
+
+.footer-item {
+    display: flex; /* Use flexbox for better alignment */
+    flex-direction: column; /* Stack icon and text vertically */
+    align-items: center; /* Center the items */
+    color: #333; /* Darker color for better contrast */
+    transition: transform 0.2s; /* Smooth hover effect */
+    text-align: center; /* Center text for better alignment */
+}
+
+.footer-icon {
+    width: 30px; /* Slightly larger icon size for better touch targets */
+    height: 30px; /* Slightly larger icon size for better touch targets */
+    margin-bottom: 4px; /* Space between icon and text */
+}
+
+.footer-item p {
+    margin: 0; /* Remove default margin */
+    font-size: 12px; /* Smaller text for better hierarchy */
+}
+
+.footer-item:hover {
+    transform: scale(1.1); /* Scale on hover for interaction */
+}
+
+.tab-content {
+    display: none; /* Hide all tab contents by default */
+}
