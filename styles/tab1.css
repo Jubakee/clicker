@@ -7,4 +7,28 @@
 .coin-image {
     width: 200px; /* Adjust size as needed */
     height: auto; /* Maintain aspect ratio */
+    transition: transform 0.1s ease; /* Smooth transition */
+}
+
+.coin-image.clicked {
+    transform: scale(0.9); /* Slightly scale down the image */
+}
+
+.feedback {
+    position: absolute;
+    font-size: 2rem; /* Adjust size as needed */
+    color: black; /* Change color to match your design */
+    pointer-events: none; /* Prevent interaction */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    opacity: 1; /* Start visible */
+    transform: translateY(0); /* Start at the original position */
+}
+
+.feedback.show {
+    opacity: 1; /* Make it visible */
+    transform: translateY(-60px); /* Move up by 30 pixels */
+}
+
+.feedback.hidden {
+    opacity: 0; /* Fade out */
 }
