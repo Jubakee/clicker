@@ -2,7 +2,7 @@
 window.Telegram.WebApp.ready();
 window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
-
+resetGame();
 
 // Define a player object with default values
 const playerData = {
