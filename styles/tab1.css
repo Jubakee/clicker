@@ -48,6 +48,7 @@
 /* Styling for the energy bar */
 #energy-bar {
     width: 100%;
+    max-width: 500px; /* Maximum width */
     height: 20px;
     background-color: #ddd; /* Light grey background */
     overflow: hidden;

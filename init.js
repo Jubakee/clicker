@@ -82,12 +82,18 @@ loadPlayerData();
 
 // Function to update the game UI
 function updateGameUI() {
-    document.getElementById('coins').textContent = playerData.playerBalance; // Update coins display
+    document.getElementById('coins').textContent = formatNumber(playerData.playerBalance); // Update coins display
     document.getElementById('level-value').textContent = `Lvl ${playerData.playerLevel}`; // Update level display
     // document.getElementById('income').textContent = `${playerData.playerIncome} / sec`; // Update income display
     updateEnergyBar(); // Update energy bar display
 
 }
+
+function formatNumber(number) {
+        return number.toLocaleString();
+}
+
+
 
 // Function to update energy bar
 function updateEnergyBar() {
