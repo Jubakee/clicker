@@ -68,8 +68,7 @@ body {
 }
 
 .main-content {
-  padding-top: 100px; /* Adjust this to ensure content is not hidden behind the fixed header */
-  padding-bottom: 60px; /* Adjust this to ensure content is not hidden behind the fixed footer */
+
   flex: 1;
 }
 
