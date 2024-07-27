@@ -32,6 +32,7 @@ const playerData = {
     playerLvlEXP: 0,
     lastEnergyUpdate: Date.now(),
     playerLastLvlUpdate: Date.now(),
+    purchasedItems: [] // New array for purchased items
 };
 
 function resetGame() {
@@ -59,6 +60,8 @@ function loadPlayerData() {
         playerData.playerLvlEXP = 0;
         playerData.lastEnergyUpdate = Date.now();
         playerData.playerLastSaved = Date.now();
+        playerData.purchasedItems= [] // New array for purchased items
+
     }
     
     // Calculate elapsed time since last save

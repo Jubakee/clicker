@@ -1,0 +1,32 @@
+.inventory-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 10px; /* Space between items */
+    padding: 10px; /* Padding around the inventory container */
+    max-height: 70vh; /* Limit the height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.inventory-item {
+    background-color: #f8f9fa; /* Light background for items */
+    border: 1px solid #e0e0e0; /* Border for items */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px; /* Padding inside items */
+    text-align: center; /* Center align text */
+    display: flex; /* Use flexbox for inner alignment */
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+}
+
+.inventory-image {
+    width: 80%; /* Make the image responsive */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 5px; /* Rounded corners for images */
+}
+
+.inventory-name {
+    font-size: 12px; /* Smaller font size for item name */
+    margin: 5px 0; /* Margin for spacing */
+}
+

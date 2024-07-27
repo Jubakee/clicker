@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="base.css">
   <link rel="stylesheet" href="styles/tab1.css">
   <link rel="stylesheet" href="styles/tab3.css">
+  <link rel="stylesheet" href="styles/tab4.css">
+
   <title>Telegram Web App</title>
 </head>
 <body>
@@ -67,63 +69,137 @@
         </section>
 
         <section id="tab3" class="tab-content">
-          <h2>Shop</h2>
           <div class="shop-container">
-              <div class="shop-item">
-                  <img src="assets/chest.png" alt="Item 1" class="shop-image">
+              <div class="shop-item" data-item-id="1">
                   <h3>Item 1</h3>
                   <p class="item-description">Description of Item 1.</p>
+                  <img src="assets/chest.png" alt="Item 1" class="shop-image">
+                  <p class="item-price">💵 10</p> <!-- Price field -->
                   <button class="buy-button">Buy</button>
               </div>
-              <div class="shop-item">
-                <img src="assets/chest.png"  alt="Item 2" class="shop-image">
+              <div class="shop-item" data-item-id="2">
                   <h3>Item 2</h3>
                   <p class="item-description">Description of Item 2.</p>
+                  <img src="assets/chest.png" alt="Item 2" class="shop-image">
+                  <p class="item-price">💵 2,500</p> <!-- Price field -->
                   <button class="buy-button">Buy</button>
               </div>
-              <div class="shop-item">
-                <img src="assets/chest.png" alt="Item 3" class="shop-image">
+              <div class="shop-item" data-item-id="3">
                   <h3>Item 3</h3>
                   <p class="item-description">Description of Item 3.</p>
+                  <img src="assets/chest.png" alt="Item 3" class="shop-image">
+                  <p class="item-price">💵 5,000</p> <!-- Price field -->
                   <button class="buy-button">Buy</button>
               </div>
-              <div class="shop-item">
-                <img src="assets/chest.png"  alt="Item 4" class="shop-image">
+              <div class="shop-item" data-item-id="4">
                   <h3>Item 4</h3>
                   <p class="item-description">Description of Item 4.</p>
+                  <img src="assets/chest.png" alt="Item 4" class="shop-image">
+                  <p class="item-price">💵 10,000</p> <!-- Price field -->
                   <button class="buy-button">Buy</button>
               </div>
-              <div class="shop-item">
-                <img src="assets/chest.png"  alt="Item 5" class="shop-image">
+              <div class="shop-item" data-item-id="5">
                   <h3>Item 5</h3>
                   <p class="item-description">Description of Item 5.</p>
+                  <img src="assets/chest.png" alt="Item 5" class="shop-image">
+                  <p class="item-price">💵 50,000</p> <!-- Price field -->
                   <button class="buy-button">Buy</button>
               </div>
-              <div class="shop-item">
-                <img src="assets/chest.png"  alt="Item 6" class="shop-image">
+              <div class="shop-item" data-item-id="6">
                   <h3>Item 6</h3>
                   <p class="item-description">Description of Item 6.</p>
+                  <img src="assets/chest.png" alt="Item 6" class="shop-image">
+                  <p class="item-price">💵 100,000</p> <!-- Price field -->
                   <button class="buy-button">Buy</button>
               </div>
-              <div class="shop-item">
-                <img src="assets/chest.png"  alt="Item 7" class="shop-image">
+              <div class="shop-item" data-item-id="7">
                   <h3>Item 7</h3>
                   <p class="item-description">Description of Item 7.</p>
+                  <img src="assets/chest.png" alt="Item 7" class="shop-image">
+                  <p class="item-price">💵 500,000</p> <!-- Price field -->
                   <button class="buy-button">Buy</button>
               </div>
-              <div class="shop-item">
-                <img src="assets/chest.png"  alt="Item 8" class="shop-image">
+              <div class="shop-item" data-item-id="8">
                   <h3>Item 8</h3>
                   <p class="item-description">Description of Item 8.</p>
+                  <img src="assets/chest.png" alt="Item 8" class="shop-image">
+                  <p class="item-price">💵 1,000,000</p> <!-- Price field -->
                   <button class="buy-button">Buy</button>
               </div>
           </div>
-        </section>
+      </section>
+      
+      <section id="tab4" class="tab-content">
+        <div class="inventory-container">
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 1" class="inventory-image">
+                <p class="inventory-name">Item 1</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 2" class="inventory-image">
+                <p class="inventory-name">Item 2</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 3" class="inventory-image">
+                <p class="inventory-name">Item 3</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 4" class="inventory-image">
+                <p class="inventory-name">Item 4</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 5" class="inventory-image">
+                <p class="inventory-name">Item 5</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 6" class="inventory-image">
+                <p class="inventory-name">Item 6</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 7" class="inventory-image">
+                <p class="inventory-name">Item 7</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 8" class="inventory-image">
+                <p class="inventory-name">Item 8</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 9" class="inventory-image">
+                <p class="inventory-name">Item 9</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 10" class="inventory-image">
+                <p class="inventory-name">Item 10</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 11" class="inventory-image">
+                <p class="inventory-name">Item 11</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 12" class="inventory-image">
+                <p class="inventory-name">Item 12</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 13" class="inventory-image">
+                <p class="inventory-name">Item 13</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 14" class="inventory-image">
+                <p class="inventory-name">Item 14</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 15" class="inventory-image">
+                <p class="inventory-name">Item 15</p>
+            </div>
+            <div class="inventory-item">
+                <img src="assets/chest.png" alt="Item 16" class="inventory-image">
+                <p class="inventory-name">Item 16</p>
+            </div>
+        </div>
+    </section>
+    
+    
 
-        <section id="tab4" class="tab-content">
-            <h2>Tab 4 Content</h2>
-            <p>This is the content for Tab 4.</p>
-        </section>
         <section id="tab5" class="tab-content">
             <h2>Tab 5 Content</h2>
             <p>This is the content for Tab 5.</p>
@@ -158,5 +234,6 @@
   <script src="init.js"></script>
   <script src="scripts/tabs.js"></script>
   <script src="scripts/tab1.js"></script>
+  <script src="scripts/tab3.js"></script>
 </body>
 </html>

@@ -27,6 +27,12 @@
     margin: 10px 0; /* Margin for spacing */
 }
 
+.item-price {
+    font-size: 16px; /* Font size for the price */
+    font-weight: bold; /* Bold text for price */
+    margin: 10px 0; /* Margin for spacing */
+}
+
 .buy-button {
     background-color: #34a0a4; /* Button background color */
     color: white; /* Button text color */
@@ -34,9 +40,6 @@
     border-radius: 5px; /* Rounded corners for button */
     padding: 10px 15px; /* Padding for button */
     cursor: pointer; /* Pointer on hover */
-    width: 100%;
+    width: 100%; /* Full width button */
 }
 
-.buy-button:hover {
-    background-color: #76c7c0; /* Change color on hover */
-}
