@@ -76,6 +76,7 @@ body {
 
 .tab-content {
   display: none;
+  background-color: #fff;
 }
 
 .tab-content.active {
