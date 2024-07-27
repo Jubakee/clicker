@@ -33,6 +33,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 12px;
+  padding: 10px;
 }
 
 .stats-container {
@@ -40,11 +42,13 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
+  
 }
 
 #income-container, #level-exp-container {
   display: flex;
   align-items: center;
+  font-size: 14px;
 }
 
 #level-exp-bar {
@@ -76,6 +80,7 @@ body {
 .tab-content.active {
     display: block;
     position: fixed;
+    background-color: #fff;
     bottom: 10%; /* Position from the bottom */
     left: 50%; /* Position from the left */
     transform: translateX(-50%); /* Center it horizontally */
@@ -94,7 +99,8 @@ body {
   border-top: 1px solid #e0e0e0;
   display: flex;
   justify-content: space-around;
-  padding: 10px 0;
+  padding: 20px 0;
+  font-size: 12px;
 }
 
 .footer-item {
@@ -105,7 +111,7 @@ body {
 
 .footer-icon {
   display: block;
-  font-size: 24px;
+  font-size: 14px;
 }
 
 .coin-container {
@@ -126,6 +132,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  
 }
 
 #energy-bar {
@@ -135,6 +142,7 @@ body {
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 10px;
+  
 }
 
 #energy-fill {
@@ -144,6 +152,10 @@ body {
   transition: width 0.3s ease;
 }
 
-#energy-value {
-  font-size: 14px;
+#energy-count {
+    font-size: 12px;
+}
+
+#max-energy{
+    font-size: 12px;
 }

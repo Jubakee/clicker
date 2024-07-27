@@ -56,7 +56,7 @@ function loadPlayerData() {
 function showAccumulatedCoinsPopup(accumulatedCoins) {
     const popup = document.createElement('div');
     popup.className = 'popup';
-    popup.innerText = `You earned ${accumulatedCoins} coins while you were away!`;
+    popup.innerText = `You earned 💵 ${accumulatedCoins} while you were away!`;
     document.body.appendChild(popup);
 
     // Style the popup
@@ -65,7 +65,7 @@ function showAccumulatedCoinsPopup(accumulatedCoins) {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        backgroundColor: '#333',
+        backgroundColor: '#fff',
         padding: '20px',
         boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
         zIndex: '1000'
