@@ -1,8 +1,11 @@
+
 const coinContainer = document.querySelector('.coin-container');
 const coinImage = document.querySelector('.coin-image');
 
 let coinsPerClick = 1; // Coins earned per click
 const feedbackQueue = [];
+
+
 
 // Function to handle feedback creation
 function createFeedback(x, y, amount) {
@@ -64,3 +67,20 @@ function batchFeedback(touches, amount) {
         });
     });
 }
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.Telegram && Telegram.WebApp) {
+            Telegram.WebApp.init();
+            Telegram.WebApp.onEvent('init', () => {
+              console.log('Telegram Web App initialized');
+              Telegram.WebApp.expand(); // Expand the web app to full height
+            });
+        
+            // Set the tgWebAppVersion
+            Telegram.WebApp.initParams = {
+              tgWebAppVersion: "7.7"
+            };
+          }
+
+});
