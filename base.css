@@ -51,22 +51,22 @@ body {
   align-items: center;
   font-size: 14px;
 }
-
 #level-exp-bar {
-  width: 100px;
-  height: 10px;
-  background-color: #ddd;
-  border-radius: 5px;
-  margin-left: 5px;
-  overflow: hidden;
+    width: 100px; /* Set your desired width */
+    height: 10px; /* Set your desired height */
+    background-color: #ddd;
+    border-radius: 5px;
+    margin-left: 5px;
+    overflow: hidden;
 }
 
 #level-exp-fill {
-  height: 100%;
-  width: 0%;
-  background-color: #4caf50;
-  transition: width 0.3s ease;
+    height: 100%;
+    width: 0%; /* Start at 0% */
+    background: linear-gradient(90deg, #76c7c0, #34a0a4); /* Gradient effect */
+    transition: width 0.3s ease; /* Smooth transition for width changes */
 }
+
 
 .main-content {
   padding-top: 100px; /* Adjust this to ensure content is not hidden behind the fixed header */
@@ -83,7 +83,7 @@ body {
     display: block;
     position: fixed;
     background-color: #fff;
-    bottom: 15%; /* Position from the bottom */
+    bottom: 10%; /* Position from the bottom */
     left: 50%; /* Position from the left */
     transform: translateX(-50%); /* Center it horizontally */
     width: 100%; /* Optional: Set to 100% for full width */
@@ -111,9 +111,18 @@ body {
 }
 
 .footer-icon {
+    padding: 5px;
   display: block;
   font-size: 14px;
 }
+
+.footer-icon.active {
+
+    transform: scale(1.5); /* Increase the size */
+    transition: transform 0.3s ease; /* Smooth transition */
+  
+}
+
 
 .coin-container {
   display: flex;
