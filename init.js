@@ -1,4 +1,88 @@
+// Initialize the Telegram Web App
 window.Telegram.WebApp.ready();
 window.Telegram.WebApp.expand();
-
 window.Telegram.WebApp.disableVerticalSwipes();
+
+// Define a player object with default values
+const playerData = {
+    playerId: null,
+    playerBalance: 0,
+    playerPerClick: 1,
+    playerIncome: 1,
+    playerEnergy: 1000,
+    playerLastSaved: null,
+    playerLevel: 1,
+    playerInventory: [],
+};
+
+// Function to save player data to localStorage
+function savePlayerData() {
+    playerData.playerLastSaved = new Date().toISOString(); // Update last saved time
+    localStorage.setItem('playerData', JSON.stringify(playerData)); // Save player data
+}
+
+// Function to load player data from localStorage
+function loadPlayerData() {
+    const savedData = localStorage.getItem('playerData'); // Get saved data
+    if (savedData) {
+        Object.assign(playerData, JSON.parse(savedData)); // Update playerData with saved data
+        
+        // Calculate elapsed time since last save
+        const lastUpdateTime = new Date(playerData.playerLastSaved).getTime();
+        const elapsedTime = Date.now() - lastUpdateTime;
+        
+        const elapsedTimeInSeconds = Math.floor(elapsedTime / 1000); // Convert to seconds
+        
+        // Update player balance based on elapsed time
+        playerData.playerBalance += elapsedTimeInSeconds * playerData.playerIncome; 
+        showAccumulatedCoinsPopup(elapsedTimeInSeconds); // Show popup for earned coins
+    }
+}
+
+// Function to display a popup with accumulated coins
+function showAccumulatedCoinsPopup(accumulatedCoins) {
+    const popup = document.createElement('div');
+    popup.className = 'popup';
+    popup.innerText = `You earned ${accumulatedCoins} coins while you were away!`;
+    document.body.appendChild(popup);
+
+    // Style the popup
+    Object.assign(popup.style, {
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: '#333',
+        padding: '20px',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+        zIndex: '1000'
+    });
+
+    // Remove the popup after 2 seconds
+    setTimeout(() => {
+        popup.remove();
+    }, 2000);
+}
+
+// Load player data on initialization
+loadPlayerData();
+
+// Function to update the game UI
+function updateGameUI() {
+    document.getElementById('coins').textContent = playerData.playerBalance; // Update coins display
+    document.getElementById('level-value').textContent = `Lvl ${playerData.playerLevel}`; // Update level display
+    document.getElementById('income').textContent = `${playerData.playerIncome} / sec`; // Update income display
+}
+
+// Function to update balance and save data
+function updateBalance() {
+    playerData.playerBalance += playerData.playerIncome; // Increase balance by player income
+    updateGameUI(); // Update the UI
+    savePlayerData(); // Save updated player data
+}
+
+// Start a timer to update balance every second
+setInterval(updateBalance, 1000); // Call updateBalance every 1000 ms (1 second)
+
+// Initial UI update
+updateGameUI();

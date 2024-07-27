@@ -33,3 +33,45 @@
 .feedback.hidden {
     opacity: 0; /* Fade out */
 }
+
+
+/* Energy bar container */
+#energy-bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 768px;
+    position: relative; /* Ensure it is placed correctly */
+    padding: 30px;
+}
+
+/* Styling for the energy bar */
+#energy-bar {
+    width: 100%;
+    max-width: 500px; /* Maximum width */
+    height: 20px;
+    background-color: #ddd; /* Light grey background */
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+/* Fill of the energy bar */
+#energy-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #76c7c0, #34a0a4); /* Gradient effect */
+    border-radius: 10px;
+}
+
+/* Container for energy value */
+#energy-value-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling for energy value text */
+#energy-value {
+    font-size: 18px; /* Slightly larger font size for better readability */
+    color: #333; /* Darker text color for contrast */
+}

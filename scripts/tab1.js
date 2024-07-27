@@ -1,7 +1,7 @@
 const coinContainer = document.querySelector('.coin-container');
 const coinImage = document.querySelector('.coin-image');
 
-let coinsPerClick = 1; // Coins earned per click
+let coinsPerClick = playerData.playerPerClick; // Coins earned per click based on player data
 const feedbackQueue = [];
 
 // Function to handle feedback creation
@@ -46,7 +46,12 @@ function coinClicked(event) {
     setTimeout(() => {
         coinImage.classList.remove('clicked');
     }, 100); // Match the CSS transition duration
-     
+
+    // Update player balance based on coinsPerClick from playerData
+    playerData.playerBalance += coinsPerClick; // Increase balance by coinsPerClick
+    updateGameUI(); // Update the UI to reflect the new balance
+    savePlayerData(); // Save updated player data
+
     batchFeedback(touches, coinsPerClick); // Batch feedback animations
 }
 
