@@ -11,6 +11,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   margin: 0;
+  background-color: #fff;
 }
 
 .container {
@@ -68,7 +69,8 @@ body {
 }
 
 .main-content {
-
+  padding-top: 100px; /* Adjust this to ensure content is not hidden behind the fixed header */
+  padding-bottom: 60px; /* Adjust this to ensure content is not hidden behind the fixed footer */
   flex: 1;
 }
 
