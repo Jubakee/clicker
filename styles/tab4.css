@@ -17,16 +17,22 @@
     flex-direction: column; /* Stack elements vertically */
     justify-content: center; /* Center vertically */
     align-items: center; /* Center horizontally */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition for hover effect */
+}
+
+.inventory-item:hover {
+    transform: scale(1.05); /* Slightly scale up on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow on hover */
 }
 
 .inventory-image {
     width: 80%; /* Make the image responsive */
     height: auto; /* Maintain aspect ratio */
     border-radius: 5px; /* Rounded corners for images */
+    margin-bottom: 5px; /* Space below the image */
 }
 
 .inventory-name {
     font-size: 12px; /* Smaller font size for item name */
     margin: 5px 0; /* Margin for spacing */
 }
-

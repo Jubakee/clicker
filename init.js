@@ -3,23 +3,6 @@ window.Telegram.WebApp.ready();
 window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
 // resetGame();
-
-// // Prevent default touch actions
-// document.addEventListener('touchmove', function(event) {
-//     event.preventDefault();
-// }, { passive: false });
-
-// let lastTouchEnd = 0;
-
-// document.addEventListener('touchend', function(event) {
-//     const now = (new Date()).getTime();
-//     if (now - lastTouchEnd <= 300) {
-//         event.preventDefault();
-//     }
-//     lastTouchEnd = now;
-// }, false);
-
-
 // Define a player object with default values
 const playerData = {
     playerId: null,
@@ -32,7 +15,7 @@ const playerData = {
     playerLvlEXP: 0,
     lastEnergyUpdate: Date.now(),
     playerLastLvlUpdate: Date.now(),
-    purchasedItems: [] // New array for purchased items
+    inventory: Array(20).fill(null), // 20 slots initialized to null
 };
 
 function resetGame() {
@@ -50,8 +33,13 @@ function loadPlayerData() {
     const savedData = localStorage.getItem('playerData'); // Get saved data
     if (savedData) {
         Object.assign(playerData, JSON.parse(savedData)); // Update playerData with saved data
+
+        // Ensure inventory is properly initialized
+        if (!Array.isArray(playerData.inventory)) {
+            playerData.inventory = Array(20).fill(null);
+        }
     } else {
-        // If no saved data, initialize playerData with default values
+        // Initialize playerData with default values if no saved data
         playerData.playerBalance = 0;
         playerData.playerPerClick = 1;
         playerData.playerIncome = 1;
@@ -60,31 +48,52 @@ function loadPlayerData() {
         playerData.playerLvlEXP = 0;
         playerData.lastEnergyUpdate = Date.now();
         playerData.playerLastSaved = Date.now();
-        playerData.purchasedItems= [] // New array for purchased items
-
+        playerData.inventory = Array(20).fill(null); // Initialize inventory
     }
-    
-    // Calculate elapsed time since last save
+
     const lastUpdateTime = playerData.playerLastSaved; // Use the last saved time directly
     const now = Date.now();
     const elapsedTime = now - lastUpdateTime;
-    
+
     const elapsedTimeInSeconds = Math.floor(elapsedTime / 1000); // Convert to seconds
-    
+
     // Update player balance based on elapsed time
-    playerData.playerBalance += elapsedTimeInSeconds * playerData.playerIncome; 
+    playerData.playerBalance += elapsedTimeInSeconds * playerData.playerIncome;
+
+    // Update player experience based on elapsed time
+    playerData.playerLvlEXP += elapsedTimeInSeconds * playerData.playerIncome;
+
+    // Handle leveling up if experience surpasses the requirement for the next level
+    let maxCoinsForNextLevel = calculateMaxCoinsForNextLevel(playerData.playerLevel);
+    while (playerData.playerLvlEXP >= maxCoinsForNextLevel) {
+        playerData.playerLevel += 1; // Level up
+        playerData.playerLvlEXP -= maxCoinsForNextLevel; // Deduct the experience required for the next level
+        maxCoinsForNextLevel = calculateMaxCoinsForNextLevel(playerData.playerLevel); // Recalculate for the next level
+    }
+
     showAccumulatedCoinsPopup(elapsedTimeInSeconds); // Show popup for earned coins
-    
+
     // Update player energy based on elapsed time
     if (elapsedTimeInSeconds > 0) {
         playerData.playerEnergy = Math.min(playerData.playerEnergy + elapsedTimeInSeconds, 1000); // Recharge energy
     }
 
     // Update last energy update time
-    playerData.lastEnergyUpdate = now; 
+    playerData.lastEnergyUpdate = now;
 
     updateGameUI(); // Update UI after loading data
 }
+
+// Function to calculate max coins required for the next level
+function calculateMaxCoinsForNextLevel(level) {
+    const a = 10; // Scaling factor
+    const b = 1.5; // Growth rate
+    const c = 10; // Minimum requirement
+    return Math.floor(a * Math.pow(level, b)) + c; // Calculate required coins for next level
+}
+
+// Initial UI update
+updateGameUI();
 
 // Function to display a popup with accumulated coins
 function showAccumulatedCoinsPopup(accumulatedCoins) {
@@ -122,6 +131,9 @@ function updateGameUI() {
     // Update the level bar based on coins
     updateLevelBar(); // Update the level bar
     updateEnergyBar(); // Update energy bar display
+
+    // Render inventory
+    renderInventory(); // Call renderInventory to update inventory UI
 }
 
 // Function to update the level bar
@@ -146,14 +158,6 @@ function updateEnergyBar() {
     }
 }
 
-// Function to calculate max coins required for the next level
-function calculateMaxCoinsForNextLevel(level) {
-    const a = 10; // Scaling factor
-    const b = 1.5; // Growth rate
-    const c = 10; // Minimum requirement
-    return Math.floor(a * Math.pow(level, b)) + c; // Calculate required coins for next level
-}
-
 function updateBalance() {
     playerData.playerBalance += playerData.playerIncome; // Increase balance by player income
     playerData.playerLvlEXP += playerData.playerIncome; // Update playerLvlEXP with income
@@ -164,7 +168,7 @@ function updateBalance() {
     if (playerData.playerLvlEXP >= maxCoinsForNextLevel) {
         playerData.playerLevel += 1; // Level up
         playerData.playerLvlEXP = 0; // Reset experience for the next level
-        displayLevelUpMessage(); // Show a message indicating the level up
+        // displayLevelUpMessage(); // Show a message indicating the level up
         resetLevelBar(); // Reset the level bar
         savePlayerData(); // Save updated player data
     }
@@ -208,3 +212,75 @@ setInterval(updateBalance, 1000); // Call updateBalance every 1000 ms (1 second)
 
 // Initial UI update
 updateGameUI();
+
+// Inventory Management
+
+// Function to load inventory from playerData
+function loadInventory() {
+    if (!Array.isArray(playerData.inventory)) {
+        playerData.inventory = Array(20).fill(null);
+    }
+}
+
+// Function to save inventory to playerData
+function saveInventory() {
+    savePlayerData();
+}
+
+// Function to render the inventory
+function renderInventory() {
+    const inventoryContainer = document.querySelector('.inventory-container');
+    if (!inventoryContainer) {
+        console.error('Inventory container not found!');
+        return;
+    }
+    inventoryContainer.innerHTML = ''; // Clear the container
+
+    playerData.inventory.forEach((item, index) => {
+        const inventoryItem = document.createElement('div');
+        inventoryItem.className = 'inventory-item';
+
+        if (item) {
+            const img = document.createElement('img');
+            img.src = item.image;
+            img.alt = item.name;
+            img.className = 'inventory-image';
+
+            const p = document.createElement('p');
+            p.className = 'inventory-name';
+            p.innerText = item.name;
+
+            inventoryItem.appendChild(img);
+            inventoryItem.appendChild(p);
+        } else {
+            inventoryItem.innerHTML = '<p class="inventory-name">Empty Slot</p>';
+        }
+
+        inventoryContainer.appendChild(inventoryItem);
+    });
+}
+
+// Function to add an item to the inventory
+function addItemToInventory(item) {
+    const emptyIndex = playerData.inventory.findIndex(slot => slot === null);
+    if (emptyIndex !== -1) {
+        playerData.inventory[emptyIndex] = item;
+        saveInventory();
+        renderInventory();
+    } else {
+        console.log('Inventory is full!');
+    }
+}
+
+// Load and render inventory on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadInventory();
+    renderInventory();
+});
+
+// // Sample usage: Adding an item to the inventory
+// const sampleItem = {
+//     name: 'Sample Item',
+//     image: 'assets/chest.png'
+// };
+// addItemToInventory(sampleItem);

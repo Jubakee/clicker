@@ -53,13 +53,12 @@ function coinClicked(event) {
         // Update player balance based on coinsPerClick from playerData
         playerData.playerBalance += coinsPerClick; // Increase balance by coinsPerClick
         playerData.playerEnergy -= 1; // Decrease energy by 1
-        
-        updateGameUI(); // Update the UI to reflect the new balance and energy
-        savePlayerData(); // Save updated player data
 
         // Update playerLvlEXP based on the coins earned
         playerData.playerLvlEXP += coinsPerClick; // Accumulate coins for level EXP
-        savePlayerData(); // Save the updated player data again
+        
+        updateGameUI(); // Update the UI to reflect the new balance and energy
+        savePlayerData(); // Save updated player data
 
         batchFeedback(touches, coinsPerClick); // Batch feedback animations
     } else {

@@ -27,13 +27,12 @@
 
 .feedback.show {
     opacity: 1; /* Make it visible */
-    transform: translateY(-60px); /* Move up by 30 pixels */
+    transform: translateY(-60px); /* Move up by 60 pixels */
 }
 
 .feedback.hidden {
     opacity: 0; /* Fade out */
 }
-
 
 /* Energy bar container */
 #energy-bar-container {
@@ -53,6 +52,8 @@
     background-color: #ddd; /* Light grey background */
     overflow: hidden;
     border-radius: 10px;
+    border: 1px solid #ccc; /* Optional: Add border for better visibility */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
 }
 
 /* Fill of the energy bar */
@@ -68,7 +69,6 @@
     justify-content: center;
     align-items: center;
     padding: 10px;
-
 }
 
 /* Styling for energy value text */

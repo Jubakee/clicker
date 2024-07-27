@@ -18,8 +18,9 @@
 .shop-image {
     width: 100%; /* Make the image responsive */
     height: auto; /* Maintain aspect ratio */
-    max-width: 120px;
+    max-width: 120px; /* Maximum width */
     border-radius: 5px; /* Rounded corners for images */
+    margin-bottom: 10px; /* Space below the image */
 }
 
 .item-description {
@@ -41,5 +42,9 @@
     padding: 10px 15px; /* Padding for button */
     cursor: pointer; /* Pointer on hover */
     width: 100%; /* Full width button */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
+.buy-button:hover {
+    background-color: #2a858a; /* Darker shade for hover effect */
+}
