@@ -1,31 +1,31 @@
 .coin-container {
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-}
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+  }
 
-
-.feedback {
-    position: absolute;
-    font-size: 1.5rem; /* Adjust size as needed */
-    color: black; /* Change color to match your design */
-    pointer-events: none; /* Prevent interaction */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    transform: translateY(0); /* Start at the original position */
-}
-
-.feedback.show {
-    opacity: 1; /* Make it visible */
-    transform: translateY(-20px); /* Move up */
-}
-
-.coin-image {
+  .coin-image {
     width: 80%;
     max-width: 300px; /* Adjust size as needed */
     height: auto; /* Maintain aspect ratio */
-    transition: transform 0.1s ease;
-}
+    transition: transform 0.1s ease-in-out;
+  }
 
-.coin-image.clicked {
-    transform: scale(0.9); /* Slightly shrink the coin image */
-}
+  .feedback {
+    position: absolute;
+    font-size: 2rem;
+    color: black;
+    pointer-events: none;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .feedback.show {
+    opacity: 1;
+    transform: translateY(-30px);
+  }
+
+  .feedback.hidden {
+    opacity: 0;
+  }
