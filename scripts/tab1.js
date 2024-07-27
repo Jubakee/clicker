@@ -11,7 +11,7 @@ const feedbackQueue = [];
 function createFeedback(x, y, amount) {
     const feedback = document.createElement('div');
     feedback.className = 'feedback';
-    feedback.innerText = `+${amount}`; // Display the amount of coins
+    feedback.innerText = `💵`; // Display the amount of coins
     feedback.style.left = `${x}px`;
     feedback.style.top = `${y}px`;
     document.body.appendChild(feedback);

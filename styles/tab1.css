@@ -23,6 +23,7 @@
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     opacity: 1; /* Start visible */
     transform: translateY(0); /* Start at the original position */
+
 }
 
 .feedback.show {
@@ -33,3 +34,4 @@
 .feedback.hidden {
     opacity: 0; /* Fade out */
 }
+
