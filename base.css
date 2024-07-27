@@ -75,22 +75,25 @@ body {
 }
 
 .tab-content {
-  display: none;
-  background-color: #fff;
-}
-
-.tab-content.active {
-    display: block;
-    position: fixed;
+    display: none;
     background-color: #fff;
-    bottom: 10%; /* Position from the bottom */
-    left: 50%; /* Position from the left */
-    transform: translateX(-50%); /* Center it horizontally */
-    width: 100%; /* Optional: Set to 100% for full width */
-    margin: 0 auto; /* Center it within the width */
-    text-align: center;
-}
-
+  }
+  
+  .tab-content.active {
+      display: block;
+      background-color: #fff;
+      width: 100%; /* Optional: Set to 100% for full width */
+      margin: 0 auto; /* Center it within the width */
+      text-align: center;
+  }
+  
+  #tab1.active {
+      position: fixed;
+      bottom: 10%; /* Position from the bottom */
+      left: 50%; /* Position from the left */
+      transform: translateX(-50%); /* Center it horizontally */
+  }
+  
 
 .footer {
   position: fixed;
