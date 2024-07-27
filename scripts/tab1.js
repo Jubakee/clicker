@@ -4,6 +4,7 @@ const coinImage = document.querySelector('.coin-image');
 let coinsPerClick = playerData.playerPerClick; // Coins earned per click based on player data
 const feedbackQueue = [];
 
+
 // Function to handle feedback creation
 function createFeedback(x, y, amount) {
     const feedback = document.createElement('div');
@@ -39,21 +40,29 @@ function coinClicked(event) {
     event.preventDefault();
     const touches = event.touches || [{ clientX: event.clientX, clientY: event.clientY }];
 
-    // Add the clicked class for animation
-    coinImage.classList.add('clicked');
+    // Check if the player has enough energy
+    if (playerData.playerEnergy > 0) {
+        // Add the clicked class for animation
+        coinImage.classList.add('clicked');
 
-    // Remove the clicked class after the animation duration
-    setTimeout(() => {
-        coinImage.classList.remove('clicked');
-    }, 100); // Match the CSS transition duration
+        // Remove the clicked class after the animation duration
+        setTimeout(() => {
+            coinImage.classList.remove('clicked');
+        }, 100); // Match the CSS transition duration
 
-    // Update player balance based on coinsPerClick from playerData
-    playerData.playerBalance += coinsPerClick; // Increase balance by coinsPerClick
-    updateGameUI(); // Update the UI to reflect the new balance
-    savePlayerData(); // Save updated player data
+        // Update player balance based on coinsPerClick from playerData
+        playerData.playerBalance += coinsPerClick; // Increase balance by coinsPerClick
+        playerData.playerEnergy -= 1; // Decrease energy by 1
+        updateGameUI(); // Update the UI to reflect the new balance and energy
+        savePlayerData(); // Save updated player data
 
-    batchFeedback(touches, coinsPerClick); // Batch feedback animations
+        batchFeedback(touches, coinsPerClick); // Batch feedback animations
+    } else {
+        // Optionally, show a message when energy is not enough
+        console.log("Not enough energy!");
+    }
 }
+
 
 function batchFeedback(touches, amount) {
     for (const touch of touches) {
@@ -69,3 +78,15 @@ function batchFeedback(touches, amount) {
         });
     });
 }
+
+
+// Start a timer to replenish energy every second
+// Start a timer to replenish energy every second
+setInterval(() => {
+    if (playerData.playerEnergy < 1000) { // Check if energy is less than max
+        playerData.playerEnergy += 1; // Increase energy by 1
+        updateEnergyBar(); // Update energy bar display
+        playerData.lastEnergyUpdate = Date.now(); // Update the last energy update time
+        savePlayerData(); // Save updated player data
+    }
+}, 1000); // Call this every 1000 ms (1 second)

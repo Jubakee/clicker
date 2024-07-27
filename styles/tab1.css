@@ -5,7 +5,7 @@
 }
 
 .coin-image {
-    width: 80%;
+    width: 100%;
     max-width: 300px; /* Adjust size as needed */
     height: auto; /* Maintain aspect ratio */
     transition: transform 0.1s ease; /* Smooth transition */

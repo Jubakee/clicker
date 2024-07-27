@@ -13,12 +13,15 @@ const playerData = {
     playerLastSaved: null,
     playerLevel: 1,
     playerInventory: [],
+    lastEnergyUpdate: Date.now(), // Add this line
 };
+
 
 // Function to save player data to localStorage
 function savePlayerData() {
-    playerData.playerLastSaved = new Date().toISOString(); // Update last saved time
-    localStorage.setItem('playerData', JSON.stringify(playerData)); // Save player data
+    playerData.playerLastSaved = Date.now();
+    playerData.lastEnergyUpdate = playerData.lastEnergyUpdate; // Save last update time
+    localStorage.setItem('playerData', JSON.stringify(playerData));
 }
 
 // Function to load player data from localStorage
@@ -28,15 +31,25 @@ function loadPlayerData() {
         Object.assign(playerData, JSON.parse(savedData)); // Update playerData with saved data
         
         // Calculate elapsed time since last save
-        const lastUpdateTime = new Date(playerData.playerLastSaved).getTime();
-        const elapsedTime = Date.now() - lastUpdateTime;
+        const lastUpdateTime = playerData.playerLastSaved; // Use the last saved time directly
+        const now = Date.now();
+        const elapsedTime = now - lastUpdateTime;
         
         const elapsedTimeInSeconds = Math.floor(elapsedTime / 1000); // Convert to seconds
         
         // Update player balance based on elapsed time
         playerData.playerBalance += elapsedTimeInSeconds * playerData.playerIncome; 
         showAccumulatedCoinsPopup(elapsedTimeInSeconds); // Show popup for earned coins
+        
+        // Update player energy based on elapsed time
+        if (elapsedTimeInSeconds > 0) {
+            playerData.playerEnergy = Math.min(playerData.playerEnergy + elapsedTimeInSeconds, 1000); // Recharge energy
+        }
+
+        // Update last energy update time
+        playerData.lastEnergyUpdate = now; 
     }
+    updateGameUI(); // Update UI after loading data
 }
 
 // Function to display a popup with accumulated coins
@@ -71,7 +84,19 @@ loadPlayerData();
 function updateGameUI() {
     document.getElementById('coins').textContent = playerData.playerBalance; // Update coins display
     document.getElementById('level-value').textContent = `Lvl ${playerData.playerLevel}`; // Update level display
-    document.getElementById('income').textContent = `${playerData.playerIncome} / sec`; // Update income display
+    // document.getElementById('income').textContent = `${playerData.playerIncome} / sec`; // Update income display
+    updateEnergyBar(); // Update energy bar display
+
+}
+
+// Function to update energy bar
+function updateEnergyBar() {
+    const energyFill = document.getElementById('energy-fill');
+    const energyValue = document.getElementById('energy-count');
+    if (energyFill && energyValue) {
+        energyFill.style.width = `${(playerData.playerEnergy / 1000) * 100}%`; // Assuming max energy is 1000
+        energyValue.innerText = playerData.playerEnergy;
+    }
 }
 
 // Function to update balance and save data
