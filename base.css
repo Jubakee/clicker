@@ -83,11 +83,10 @@ body {
     display: block;
     position: fixed;
     background-color: #fff;
-    bottom: 10%; /* Position from the bottom */
+    bottom: 15%; /* Position from the bottom */
     left: 50%; /* Position from the left */
     transform: translateX(-50%); /* Center it horizontally */
     width: 100%; /* Optional: Set to 100% for full width */
-    max-width: 600px; /* Set a maximum width to prevent stretching */
     margin: 0 auto; /* Center it within the width */
     text-align: center;
 }
@@ -120,7 +119,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
 }
 
 .coin-image {
@@ -143,7 +141,6 @@ body {
   background-color: #ddd;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 10px;
   
 }
 
