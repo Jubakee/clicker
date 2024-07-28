@@ -10,7 +10,6 @@ function saveInventory() {
     savePlayerData();
 }
 
-// Render inventory
 function renderInventory() {
     const inventoryContainer = document.querySelector('.inventory-container');
     if (!inventoryContainer) {
@@ -32,19 +31,23 @@ function renderInventory() {
             const p = document.createElement('p');
             p.className = 'inventory-name';
             p.innerText = item.name;
-     
+
             inventoryItem.appendChild(img);
             inventoryItem.appendChild(p);
 
-            // Add rarity class to inventory item
             if (item.rarity) {
-                const rarityClass = item.rarity.toLowerCase(); // Ensure class names are lowercase
+                const rarityClass = item.rarity.toLowerCase();
                 inventoryItem.classList.add(rarityClass);
             }
 
-            // Add click event listener to show item details in a popup
+            // Check if the item is equipped and add the 'equipped' class
+            const isEquipped = Object.values(playerData.playerEquipped).some(equippedItem => equippedItem && equippedItem.id === item.id);
+            if (isEquipped) {
+                inventoryItem.classList.add('equipped');
+            }
+
             inventoryItem.addEventListener('click', () => {
-                showItemPopup(item);
+                showItemPopup(item, isEquipped);
             });
         } else {
             inventoryItem.innerHTML = '<p class="inventory-name">Empty</p>';
@@ -54,8 +57,8 @@ function renderInventory() {
     });
 }
 
-// Show item popup
-function showItemPopup(item) {
+
+function showItemPopup(item, isEquipped) {
     const popupOverlay = document.createElement('div');
     popupOverlay.className = 'popup-overlay';
 
@@ -83,76 +86,27 @@ function showItemPopup(item) {
     const actionButton = document.createElement('button');
     actionButton.className = 'popup-button';
 
-    console.log(item)
     if (item.type === 'Chest' && item.isOpened === 'false') {
         actionButton.innerText = 'Open';
         actionButton.addEventListener('click', () => {
-            // Open chest logic here
-            item.isOpened = 'true';
-    
-            let randomItem;
-            if (item.rarity === 'Common') {
-                // Select a random item from the common item pool
-                randomItem = commonItemPool[Math.floor(Math.random() * commonItemPool.length)];
-            } else if (item.rarity === 'Uncommon') {
-                // Select a random item from the uncommon item pool
-                randomItem = uncommonItemPool[Math.floor(Math.random() * uncommonItemPool.length)];
-            }
-            else if (item.rarity === 'Rare') {
-                // Select a random item from the uncommon item pool
-                randomItem = rareItemPool[Math.floor(Math.random() * rareItemPool.length)];
-            }
-            else if (item.rarity === 'Epic') {
-                // Select a random item from the uncommon item pool
-                randomItem = epicItemPool[Math.floor(Math.random() * epicItemPool.length)];
-            }
-            // Replace the chest with the selected item
-            const chestIndex = playerData.inventory.indexOf(item);
-            if (chestIndex !== -1) {
-                playerData.inventory[chestIndex] = randomItem;
-            }
-    
-            // Save the updated inventory
-            saveInventory();
-    
-            // Re-render the inventory
-            renderInventory();
-    
-            console.log(`Opened: ${item.name} and replaced with ${randomItem.name}`);
+            openChest(item);
+            closePopup(popupOverlay);
+        });
+    } else if (isEquipped) {
+        actionButton.innerText = 'Unequip';
+        console.log(`Setting up Unequip button for: ${item.name}`); // Add this log
+        actionButton.addEventListener('click', () => {
+            console.log(`Unequipping item: ${item.name}`); // Add this log
+            unequipItem2(item);
             closePopup(popupOverlay);
         });
     } else {
-        
         actionButton.innerText = 'Equip';
         actionButton.addEventListener('click', () => {
-            // Equip item logic here
             equipItem(item);
             closePopup(popupOverlay);
         });
     }
-    
-
-    function equipItem(item) {
-        const slot = item.slot; // Assuming each item has a 'slot' property (e.g., 'head', 'top', 'bottom', 'hand', 'feet')
-        if (playerData.playerEquipped[slot]) {
-            console.log(`Unequipped: ${playerData.playerEquipped[slot].name}`);
-        }
-        playerData.playerEquipped[slot] = item;
-        console.log(`Equipped: ${item.name} to ${slot}`);
-        savePlayerData();
-        renderInventory();
-        renderEquippedItems();
-    }
-    
-
-    // const recycleButton = document.createElement('button');
-    // recycleButton.innerText = 'Recycle';
-    // recycleButton.className = 'popup-button';
-    // recycleButton.addEventListener('click', () => {
-    //     // Recycle item logic here
-    //     console.log(`Recycled: ${item.name}`);
-    //     closePopup(popupOverlay);
-    // });
 
     const closeButton = document.createElement('button');
     closeButton.innerText = 'Close';
@@ -165,7 +119,6 @@ function showItemPopup(item) {
     popup.appendChild(itemName);
     popup.appendChild(itemDescription);
     popup.appendChild(actionButton);
-    // popup.appendChild(recycleButton);
     popup.appendChild(closeButton);
 
     popupOverlay.appendChild(popup);
@@ -217,15 +170,19 @@ function showItemPopup(item) {
             color: '#fff',
             fontSize: '16px'
         });
-
-        // button.addEventListener('mouseenter', () => {
-        //     button.style.backgroundColor = '#0056b3';
-        // });
-
-        // button.addEventListener('mouseleave', () => {
-        //     button.style.backgroundColor = '#007bff';
-        // });
     });
+}
+
+function unequipItem2(item) {
+    console.log('Unequip item function called for:', item.name);
+    const slot = Object.keys(playerData.playerEquipped).find(key => playerData.playerEquipped[key] && playerData.playerEquipped[key].id === item.id);
+    if (slot) {
+        playerData.playerEquipped[slot] = null;
+        console.log(`Unequipped: ${item.name} from ${slot}`);
+        savePlayerData();
+        renderInventory();
+        renderEquippedItems();
+    }
 }
 
 // Function to close the popup
@@ -233,16 +190,93 @@ function closePopup(popupOverlay) {
     popupOverlay.remove();
 }
 
-// Add an item to the inventory
-function addItemToInventory(item) {
-    const emptyIndex = playerData.inventory.findIndex(slot => slot === null);
-    if (emptyIndex !== -1) {
-        playerData.inventory[emptyIndex] = item;
-        saveInventory();
+// Load and render inventory on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadInventory();
+    renderInventory();
+});
+
+
+function unequipItem(item) {
+
+    const slot = Object.keys(playerData.playerEquipped).find(key => playerData.playerEquipped[key] && playerData.playerEquipped[key].id === item.id);
+    if (slot) {
+        playerData.playerEquipped[slot] = null;
+        console.log(`Unequipped: ${item.name} from ${slot}`);
+        savePlayerData();
         renderInventory();
-    } else {
-        console.log('Inventory is full!');
+        renderEquippedItems();
     }
+}
+
+// Function to close the popup
+function closePopup(popupOverlay) {
+    
+    popupOverlay.remove();
+}
+
+// Load and render inventory on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadInventory();
+    renderInventory();
+});
+
+function addItemToInventory(itemPool) {
+    const newItem = itemPool[Math.floor(Math.random() * itemPool.length)]();
+    playerData.inventory.push(newItem);
+    savePlayerData();
+    renderInventory();
+}
+
+function openChest(item) {
+    item.isOpened = 'true';
+
+    let randomItem;
+    if (item.rarity === 'Common') {
+        randomItem = commonItemPool[Math.floor(Math.random() * commonItemPool.length)]();
+    } else if (item.rarity === 'Uncommon') {
+        randomItem = uncommonItemPool[Math.floor(Math.random() * uncommonItemPool.length)]();
+    } else if (item.rarity === 'Rare') {
+        randomItem = rareItemPool[Math.floor(Math.random() * rareItemPool.length)]();
+    } else if (item.rarity === 'Epic') {
+        randomItem = epicItemPool[Math.floor(Math.random() * epicItemPool.length)]();
+    }
+
+    const chestIndex = playerData.inventory.indexOf(item);
+    if (chestIndex !== -1) {
+        playerData.inventory[chestIndex] = randomItem;
+    }
+
+    savePlayerData();
+    renderInventory();
+    console.log(`Opened: ${item.name} and replaced with ${randomItem.name}`);
+}
+
+function equipItem(item) {
+    const slot = item.slot;
+    if (playerData.playerEquipped[slot]) {
+        console.log(`Unequipped: ${playerData.playerEquipped[slot].name}`);
+    }
+    playerData.playerEquipped[slot] = item;
+    console.log(`Equipped: ${item.name} to ${slot}`);
+    savePlayerData();
+    renderInventory();
+    renderEquippedItems();
+}
+
+function unequipItem(item) {
+    console.log('unequip')
+    const slot = item.slot;
+    playerData.playerEquipped[slot] = null;
+    console.log(`Unequipped: ${item.name} from ${slot}`);
+    savePlayerData();
+    renderInventory();
+    renderEquippedItems();
+}
+
+// Function to close the popup
+function closePopup(popupOverlay) {
+    popupOverlay.remove();
 }
 
 // Load and render inventory on page load

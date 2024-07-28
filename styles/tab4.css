@@ -67,3 +67,9 @@ margin-bottom: 20px;
     box-shadow: 0 0 5px purple;
     background: linear-gradient(45deg, purple, violet);
 }
+
+.equipped {
+    border: 1px solid red; /* Red border for equipped items */
+    box-shadow: 0 0 5px red;
+    background: linear-gradient(45deg, red, darkred);
+}

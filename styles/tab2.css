@@ -44,3 +44,17 @@
 
     text-align: center;
 }
+
+.unequip-button {
+    background-color: #333; /* Button background color */
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners for button */
+    padding: 10px 15px; /* Padding for button */
+    cursor: pointer; /* Pointer on hover */
+    width: 100%; /* Full width button */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    margin-top: 5px; /* Space below the image */
+}

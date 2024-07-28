@@ -27,9 +27,17 @@ function renderEquippedItems() {
             itemDescription.className = 'equipped-item-description';
             itemDescription.innerText = equippedItem.description;
 
+            const unequipButton = document.createElement('button');
+            unequipButton.innerText = 'Unequip';
+            unequipButton.className = 'unequip-button';
+            unequipButton.addEventListener('click', () => {
+                unequipItem(slot);
+            });
+            
             slotElement.appendChild(itemImage);
             slotElement.appendChild(itemName);
             slotElement.appendChild(itemDescription);
+            slotElement.appendChild(unequipButton);
 
             // Add rarity class to the equipped item
             if (equippedItem.rarity) {
@@ -47,7 +55,30 @@ function renderEquippedItems() {
         }
     });
 
+    // Set player income to base value before recalculating total boost
+    playerData.playerIncome = playerData.baseIncome + totalBoost;
+
     // Display the total stat boosts
     const summaryElement = document.getElementById('equipped-items-summary');
     summaryElement.innerText = `Total Boost: +${totalBoost}`;
+
+    savePlayerData();
 }
+
+// Function to unequip an item
+function unequipItem(slot) {
+    const equippedItem = playerData.playerEquipped[slot];
+    if (equippedItem) {
+        // Remove the item from the equipped slot
+        playerData.playerEquipped[slot] = null;
+
+        // Recalculate the player income without the unequipped item's boost
+        renderEquippedItems();
+
+        // Optionally, you can log the action or handle additional logic if needed
+        console.log(`Unequipped: ${equippedItem.name} from ${slot}`);
+    }
+}
+
+// Example base income initialization
+playerData.baseIncome = 1 // or set this to your game's base income value

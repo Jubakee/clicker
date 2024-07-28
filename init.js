@@ -50,6 +50,18 @@ function loadPlayerData() {
             playerData.inventory = Array(20).fill(null);
         }
 
+        playerData.inventory.forEach(item => {
+            if (item && !item.id) {
+                item.id = generateUUID();
+            }
+        });
+
+        Object.keys(playerData.playerEquipped).forEach(slot => {
+            if (playerData.playerEquipped[slot] && !playerData.playerEquipped[slot].id) {
+                playerData.playerEquipped[slot].id = generateUUID();
+            }
+        });
+
         // Ensure playerEquipped is properly initialized
         if (!playerData.playerEquipped || typeof playerData.playerEquipped !== 'object') {
             playerData.playerEquipped = {
@@ -206,30 +218,30 @@ function updateBalance() {
     savePlayerData(); // Save updated player data
 }
 
-// Function to display level up message
-function displayLevelUpMessage() {
-    const levelUpPopup = document.createElement('div');
-    levelUpPopup.className = 'popup';
-    levelUpPopup.innerText = `Congratulations! You've reached Level ${playerData.playerLevel}!`;
-    document.body.appendChild(levelUpPopup);
+// // Function to display level up message
+// function displayLevelUpMessage() {
+//     const levelUpPopup = document.createElement('div');
+//     levelUpPopup.className = 'popup';
+//     levelUpPopup.innerText = `Congratulations! You've reached Level ${playerData.playerLevel}!`;
+//     document.body.appendChild(levelUpPopup);
 
-    // Style the level up popup
-    Object.assign(levelUpPopup.style, {
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        backgroundColor: '#fff',
-        padding: '20px',
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
-        zIndex: '1000'
-    });
+//     // Style the level up popup
+//     Object.assign(levelUpPopup.style, {
+//         position: 'fixed',
+//         top: '50%',
+//         left: '50%',
+//         transform: 'translate(-50%, -50%)',
+//         backgroundColor: '#fff',
+//         padding: '20px',
+//         boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+//         zIndex: '1000'
+//     });
 
-    // Remove the level up popup after 2 seconds
-    setTimeout(() => {
-        levelUpPopup.remove();
-    }, 2000);
-}
+//     // Remove the level up popup after 2 seconds
+//     setTimeout(() => {
+//         levelUpPopup.remove();
+//     }, 2000);
+// }
 
 // Function to reset the level bar for the next level
 function resetLevelBar() {
