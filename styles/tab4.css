@@ -1,11 +1,16 @@
 .inventory-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    gap: 10px; /* Space between items */
-    padding: 10px; /* Padding around the inventory container */
+    gap: 20px; /* Space between items */
+    padding: 20px; /* Padding around the inventory container */
     max-height: 70vh; /* Limit the height for scrolling */
-    overflow-y: auto; /* Enable vertical scrolling */
+    align-items: center;
+width: 100%;
 }
+
+
+
+
 
 .inventory-item {
     background-color: #f8f9fa; /* Light background for items */
