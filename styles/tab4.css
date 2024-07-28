@@ -9,7 +9,8 @@
 
 .inventory-item {
     background-color: #f8f9fa; /* Light background for items */
-    border: 1px solid #e0e0e0; /* Border for items */
+    font-weight: bold;
+        border: 1px solid #e0e0e0; /* Border for items */
     border-radius: 5px; /* Rounded corners */
     padding: 10px; /* Padding inside items */
     text-align: center; /* Center align text */
@@ -35,4 +36,28 @@
 .inventory-name {
     font-size: 12px; /* Smaller font size for item name */
     margin: 5px 0; /* Margin for spacing */
+}
+
+.common {
+    border: 1px solid green;
+    box-shadow: 0 0 5px green;
+    background: linear-gradient(45deg, green, lightgreen);
+}
+
+.uncommon {
+    border: 1px solid blue;
+    box-shadow: 0 0 5px blue;
+    background: linear-gradient(45deg, blue, lightblue);
+}
+
+.rare {
+    border: 1px solid gold;
+    box-shadow: 0 0 5px gold;
+    background: linear-gradient(45deg, gold, yellow);
+}
+
+.epic {
+    border: 1px solid purple;
+    box-shadow: 0 0 5px purple;
+    background: linear-gradient(45deg, purple, violet);
 }

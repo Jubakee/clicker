@@ -2,7 +2,7 @@
 window.Telegram.WebApp.ready();
 window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
-// resetGame();
+//resetGame();
 // Define a player object with default values
 const playerData = {
     playerId: null,
@@ -226,8 +226,6 @@ function loadInventory() {
 function saveInventory() {
     savePlayerData();
 }
-
-// Function to render the inventory
 function renderInventory() {
     const inventoryContainer = document.querySelector('.inventory-container');
     if (!inventoryContainer) {
@@ -252,6 +250,17 @@ function renderInventory() {
 
             inventoryItem.appendChild(img);
             inventoryItem.appendChild(p);
+
+            // Add rarity class to inventory item
+            if (item.rarity) {
+                const rarityClass = item.rarity.toLowerCase(); // Ensure class names are lowercase
+                inventoryItem.classList.add(rarityClass);
+            }
+
+            // Add click event listener to show item details in a popup
+            inventoryItem.addEventListener('click', () => {
+                showItemPopup(item);
+            });
         } else {
             inventoryItem.innerHTML = '<p class="inventory-name">Empty Slot</p>';
         }
@@ -259,6 +268,130 @@ function renderInventory() {
         inventoryContainer.appendChild(inventoryItem);
     });
 }
+
+function showItemPopup(item) {
+    const popupOverlay = document.createElement('div');
+    popupOverlay.className = 'popup-overlay';
+
+    const popup = document.createElement('div');
+    popup.className = 'popup';
+
+    if (item.rarity) {
+        const rarityClass = item.rarity.toLowerCase(); // Match CSS class names in tab4.css
+        popup.classList.add(rarityClass);
+    }
+
+    const itemImage = document.createElement('img');
+    itemImage.src = item.image;
+    itemImage.alt = item.name;
+    itemImage.className = 'popup-image';
+
+    const itemName = document.createElement('h3');
+    itemName.innerText = item.name;
+    itemName.className = 'popup-name';
+
+    const itemDescription = document.createElement('p');
+    itemDescription.innerText = item.description;
+    itemDescription.className = 'popup-description';
+
+    const equipButton = document.createElement('button');
+    equipButton.innerText = 'Equip';
+    equipButton.className = 'popup-button';
+    equipButton.addEventListener('click', () => {
+        // Equip item logic here
+        console.log(`Equipped: ${item.name}`);
+        closePopup(popupOverlay);
+    });
+
+    const recycleButton = document.createElement('button');
+    recycleButton.innerText = 'Recycle';
+    recycleButton.className = 'popup-button';
+    recycleButton.addEventListener('click', () => {
+        // Recycle item logic here
+        console.log(`Recycled: ${item.name}`);
+        closePopup(popupOverlay);
+    });
+
+    const closeButton = document.createElement('button');
+    closeButton.innerText = 'Close';
+    closeButton.className = 'popup-button';
+    closeButton.addEventListener('click', () => {
+        closePopup(popupOverlay);
+    });
+
+    popup.appendChild(itemImage);
+    popup.appendChild(itemName);
+    popup.appendChild(itemDescription);
+    popup.appendChild(equipButton);
+    popup.appendChild(recycleButton);
+    popup.appendChild(closeButton);
+
+    popupOverlay.appendChild(popup);
+    document.body.appendChild(popupOverlay);
+
+    // Style the popup overlay
+    Object.assign(popupOverlay.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: '1000'
+    });
+
+    // Style the popup
+    Object.assign(popup.style, {
+        backgroundColor: '#fff',
+       
+        padding: '20px',
+        borderRadius: '10px',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+        textAlign: 'center',
+        maxWidth: '300px',
+        width: '100%',
+    });
+
+    // Style the popup image
+    Object.assign(itemImage.style, {
+        maxWidth: '100%',
+        borderRadius: '10px'
+    });
+
+    // Style the popup buttons
+    const buttons = popup.querySelectorAll('.popup-button');
+    buttons.forEach(button => {
+        Object.assign(button.style, {
+            display: 'block',
+            width: '100%',
+            padding: '10px',
+            margin: '10px 0',
+            borderRadius: '5px',
+            border: 'none',
+            cursor: 'pointer',
+            backgroundColor: '#333',
+            color: '#fff',
+            fontSize: '16px'
+        });
+
+        button.addEventListener('mouseenter', () => {
+            button.style.backgroundColor = '#0056b3';
+        });
+
+        button.addEventListener('mouseleave', () => {
+            button.style.backgroundColor = '#007bff';
+        });
+    });
+}
+
+// Function to close the popup
+function closePopup(popupOverlay) {
+    popupOverlay.remove();
+}
+
 
 // Function to add an item to the inventory
 function addItemToInventory(item) {

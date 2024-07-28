@@ -1,4 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const shopItems = document.querySelectorAll(".shop-item");
+
+    shopItems.forEach(item => {
+        const rarity = item.getAttribute("data-item-rarity").toLowerCase();
+        item.classList.add(rarity);
+    });
+
     const buyButtons = document.querySelectorAll(".buy-button");
 
     buyButtons.forEach(button => {
@@ -12,6 +19,19 @@ document.addEventListener("DOMContentLoaded", () => {
             // Select the price element and format it
             const itemPriceText = shopItem.querySelector(".item-price").innerText;
             const itemPrice = parseFloat(itemPriceText.replace(/[^0-9.-]+/g, "")); // Remove currency symbol and commas
+
+            // Define additional properties for the inventory item
+            const itemType = shopItem.getAttribute("data-item-type") || "Unknown";
+            const itemRarity = shopItem.getAttribute("data-item-rarity") || "Common";
+            const itemRequirement = shopItem.getAttribute("data-item-requirement") || "None";
+            const itemRequirementLevel = parseInt(itemRequirement.replace(/[^0-9]/g, ""), 10); // Extract numeric level requirement
+
+            // Check player level
+            if (playerData.playerLevel < itemRequirementLevel) {
+                alert(`You need to be at least level ${itemRequirementLevel} to purchase ${itemName}.`);
+                console.log(`Player level too low to purchase ${itemName}. Required: ${itemRequirementLevel}, Current: ${playerData.playerLevel}`);
+                return;
+            }
 
             // Check player coin balance
             if (playerData.playerBalance >= itemPrice) {
@@ -30,7 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             inventoryId: emptySlotIndex + 1, // Use slot index + 1 as inventoryId
                             name: itemName,
                             description: itemDescription,
-                            image: itemImage
+                            image: itemImage,
+                            type: itemType,
+                            rarity: itemRarity,
+                            datePurchased: new Date().toISOString(),
+                            requirement: itemRequirement
                         };
 
                         savePlayerData(); // Save updated player data

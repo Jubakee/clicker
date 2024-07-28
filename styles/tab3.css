@@ -13,36 +13,47 @@
     border-radius: 10px; /* Rounded corners */
     padding: 10px; /* Padding inside items */
     text-align: center; /* Center align text */
+    font-size: 14px; /* Adjust font size */
+
 }
+
 
 .shop-image {
     width: 100%; /* Make the image responsive */
     height: auto; /* Maintain aspect ratio */
-    max-width: 120px; /* Maximum width */
+    max-width: 100px; /* Maximum width */
     border-radius: 5px; /* Rounded corners for images */
     margin-bottom: 10px; /* Space below the image */
 }
 
 .item-description {
-    font-size: 14px; /* Adjust font size */
+    font-size: 10px; /* Adjust font size */
     margin: 10px 0; /* Margin for spacing */
+}
+
+.item-level{
+    font-size: 9px;
 }
 
 .item-price {
-    font-size: 16px; /* Font size for the price */
+    font-size: 14px; /* Font size for the price */
     font-weight: bold; /* Bold text for price */
-    margin: 10px 0; /* Margin for spacing */
-}
+    padding: 10px;
+    }
 
 .buy-button {
-    background-color: #34a0a4; /* Button background color */
-    color: white; /* Button text color */
+    background-color: #333; /* Button background color */
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners for button */
     padding: 10px 15px; /* Padding for button */
     cursor: pointer; /* Pointer on hover */
     width: 100%; /* Full width button */
     transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    margin-bottom: 5px; /* Space below the image */
+
 }
 
 .buy-button:hover {
