@@ -25,7 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const itemRarity = shopItem.getAttribute("data-item-rarity") || "Common";
             const itemRequirement = shopItem.getAttribute("data-item-requirement") || "None";
             const itemRequirementLevel = parseInt(itemRequirement.replace(/[^0-9]/g, ""), 10); // Extract numeric level requirement
-
+            
+            const itemIsOpened = shopItem.getAttribute("data-item-opened") || "false";
             // Check player level
             if (playerData.playerLevel < itemRequirementLevel) {
                 alert(`You need to be at least level ${itemRequirementLevel} to purchase ${itemName}.`);
@@ -54,7 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             type: itemType,
                             rarity: itemRarity,
                             datePurchased: new Date().toISOString(),
-                            requirement: itemRequirement
+                            requirement: itemRequirement,
+                            isOpened: itemIsOpened
                         };
 
                         savePlayerData(); // Save updated player data
