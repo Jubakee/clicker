@@ -3,9 +3,9 @@
     grid-template-columns: repeat(2, 1fr); /* 2 columns */
     gap: 20px; /* Space between items */
     padding: 20px; /* Padding around the shop container */
-    max-height: 70vh; /* Limit the height for scrolling */
     align-items: center;
     width: 100%;
+    margin-bottom: 20px;
 }
 
 
