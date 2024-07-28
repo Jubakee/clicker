@@ -4,6 +4,8 @@ window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
 resetGame();
 // Define a player object with default values
+
+
 const playerData = {
     playerId: null,
     playerBalance: 0,
@@ -16,7 +18,15 @@ const playerData = {
     lastEnergyUpdate: Date.now(),
     playerLastLvlUpdate: Date.now(),
     inventory: Array(20).fill(null), // 20 slots initialized to null
+    playerEquipped: {
+        head: null,
+        top: null,
+        bottom: null,
+        hand: null,
+        feet: null
+    }
 };
+
 
 function resetGame() {
     // Clear saved data from local storage
@@ -29,6 +39,7 @@ function savePlayerData() {
     localStorage.setItem('playerData', JSON.stringify(playerData));
 }
 
+
 function loadPlayerData() {
     const savedData = localStorage.getItem('playerData'); // Get saved data
     if (savedData) {
@@ -37,6 +48,17 @@ function loadPlayerData() {
         // Ensure inventory is properly initialized
         if (!Array.isArray(playerData.inventory)) {
             playerData.inventory = Array(20).fill(null);
+        }
+
+        // Ensure playerEquipped is properly initialized
+        if (!playerData.playerEquipped || typeof playerData.playerEquipped !== 'object') {
+            playerData.playerEquipped = {
+                head: null,
+                top: null,
+                bottom: null,
+                hand: null,
+                feet: null
+            };
         }
     } else {
         // Initialize playerData with default values if no saved data
@@ -49,6 +71,13 @@ function loadPlayerData() {
         playerData.lastEnergyUpdate = Date.now();
         playerData.playerLastSaved = Date.now();
         playerData.inventory = Array(20).fill(null); // Initialize inventory
+        playerData.playerEquipped = {
+            head: null,
+            top: null,
+            bottom: null,
+            hand: null,
+            feet: null
+        };
     }
 
     const lastUpdateTime = playerData.playerLastSaved; // Use the last saved time directly

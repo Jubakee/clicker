@@ -126,9 +126,21 @@ function showItemPopup(item) {
         actionButton.innerText = 'Equip';
         actionButton.addEventListener('click', () => {
             // Equip item logic here
-            console.log(`Equipped: ${item.name}`);
+            equipItem(item);
             closePopup(popupOverlay);
         });
+    }
+    
+
+    function equipItem(item) {
+        const slot = item.slot; // Assuming each item has a 'slot' property (e.g., 'head', 'top', 'bottom', 'hand', 'feet')
+        if (playerData.playerEquipped[slot]) {
+            console.log(`Unequipped: ${playerData.playerEquipped[slot].name}`);
+        }
+        playerData.playerEquipped[slot] = item;
+        console.log(`Equipped: ${item.name} to ${slot}`);
+        savePlayerData();
+        renderInventory();
     }
     
 

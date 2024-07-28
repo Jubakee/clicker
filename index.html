@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="stylesheet" href="base.css">
   <link rel="stylesheet" href="styles/tab1.css">
+  <link rel="stylesheet" href="styles/tab2.css">
   <link rel="stylesheet" href="styles/tab3.css">
   <link rel="stylesheet" href="styles/tab4.css">
 
@@ -64,10 +65,31 @@
         </section>
         
         <section id="tab2" class="tab-content">
-            <h2>Tab 2 Content</h2>
-            <p>This is the content for Tab 2.</p>
-        </section>
-
+          <h2>Equipped Items</h2>
+          <div class="equipped-items-container">
+              <div class="equipped-item" id="head-slot">
+                  <h3>Head</h3>
+                  <div class="equipped-item-content"></div>
+              </div>
+              <div class="equipped-item" id="top-slot">
+                  <h3>Top</h3>
+                  <div class="equipped-item-content"></div>
+              </div>
+              <div class="equipped-item" id="bottom-slot">
+                  <h3>Bottom</h3>
+                  <div class="equipped-item-content"></div>
+              </div>
+              <div class="equipped-item" id="hand-slot">
+                  <h3>Hand</h3>
+                  <div class="equipped-item-content"></div>
+              </div>
+              <div class="equipped-item" id="feet-slot">
+                  <h3>Feet</h3>
+                  <div class="equipped-item-content"></div>
+              </div>
+          </div>
+      </section>
+      
         <section id="tab3" class="tab-content">
           <div class="shop-container">
             <div class="shop-item" data-item-id="1" data-item-type="Chest" data-item-rarity="Common" data-item-requirement="Level 1" data-item-opened="false">
@@ -80,7 +102,7 @@
 
             </div>
             
-              <div class="shop-item" data-item-id="2" data-item-type="Chest" data-item-rarity="Uncommon" data-item-requirement="Level 1">
+              <div class="shop-item" data-item-id="2" data-item-type="Chest" data-item-rarity="Uncommon" data-item-requirement="Level 1"data-item-opened="false">
                   <h3>Chest</h3>
                   <p class="item-description">Uncommon Chest</p>
                   <img src="assets/chest.png" alt="Item 2" class="shop-image">
@@ -88,7 +110,7 @@
                   <button class="buy-button">Buy</button>
                   <span class="item-level">*Requires Level 15.</span>
               </div>
-              <div class="shop-item" data-item-id="3" data-item-type="Chest" data-item-rarity="Rare" data-item-requirement="Level 1">
+              <div class="shop-item" data-item-id="3" data-item-type="Chest" data-item-rarity="Rare" data-item-requirement="Level 1"data-item-opened="false">
                   <h3>Chest</h3>
                   <p class="item-description">Rare Chest</p>
                   <img src="assets/chest.png" alt="Item 3" class="shop-image">
@@ -96,7 +118,7 @@
                   <button class="buy-button">Buy</button>
                   <span class="item-level">*Requires Level 25.</span>
               </div>
-              <div class="shop-item" data-item-id="4" data-item-type="Chest" data-item-rarity="Epic" data-item-requirement="Level 1">
+              <div class="shop-item" data-item-id="4" data-item-type="Chest" data-item-rarity="Epic" data-item-requirement="Level 1"data-item-opened="false">
                   <h3>Chest</h3>
                   <p class="item-description">Epic Chest</p>
                   <img src="assets/chest.png" alt="Item 4" class="shop-image">
@@ -150,14 +172,16 @@
 
 
 
-
+  <script src="scripts/item.js"></script>
   <script src="scripts/tabs.js"></script>
 
   <script src="scripts/tab3.js"></script>
   <script src="scripts/tab4.js"></script>
   <script src="init.js"></script>
   <script src="scripts/tab1.js"></script>
-  <script src="scripts/item.js"></script>
+  <script src="scripts/tab2.js"></script>
+
+  
   <!-- <script src="scripts/tab4.js"></script> -->
 </body>
 </html>
