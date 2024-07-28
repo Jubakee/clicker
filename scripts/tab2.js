@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function renderEquippedItems() {
     const slots = ['head', 'top', 'bottom', 'hand', 'feet'];
+    let totalBoost = 0;
 
     slots.forEach(slot => {
         const slotElement = document.getElementById(`${slot}-slot`).querySelector('.equipped-item-content');
@@ -35,8 +36,18 @@ function renderEquippedItems() {
                 const rarityClass = equippedItem.rarity.toLowerCase(); // Ensure class names are lowercase
                 slotElement.parentElement.classList.add(rarityClass);
             }
+
+            // Extract and sum up the stat boost from the item description
+            const boostMatch = equippedItem.description.match(/\+[\D]*([\d]+)/);
+            if (boostMatch) {
+                totalBoost += parseInt(boostMatch[1], 10);
+            }
         } else {
             slotElement.innerText = 'No item equipped';
         }
     });
+
+    // Display the total stat boosts
+    const summaryElement = document.getElementById('equipped-items-summary');
+    summaryElement.innerText = `Total Boost: +${totalBoost}`;
 }

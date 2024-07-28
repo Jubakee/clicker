@@ -141,6 +141,7 @@ function showItemPopup(item) {
         console.log(`Equipped: ${item.name} to ${slot}`);
         savePlayerData();
         renderInventory();
+        renderEquippedItems();
     }
     
 
