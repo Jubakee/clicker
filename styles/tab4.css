@@ -71,7 +71,7 @@ margin-bottom: 20px;
 .equipped {
     border: 1px solid red; /* Red border for equipped items */
     box-shadow: 0 0 5px red;
-    background: linear-gradient(45deg, red, darkred);
+  
 }
 
 .popup-slot{
@@ -88,4 +88,21 @@ margin-bottom: 20px;
 .popup-description{
     font-size: 14px;
     padding: 5px;
+}
+
+/* <div class="filter-container">
+<label for="slot-filter">Filter by slot:</label>
+<select id="slot-filter">
+    <option value="all">All</option>
+    <option value="head">Head</option>
+    <option value="top">Top</option>
+    <option value="bottom">Bottom</option>
+    <option value="hand">Hand</option>
+    <option value="feet">Feet</option>
+</select>
+</div> */
+
+.filter-container{
+    padding: 5px;
+    font-size: 14px;
 }

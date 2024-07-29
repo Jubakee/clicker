@@ -18,7 +18,13 @@ function renderInventory() {
     }
     inventoryContainer.innerHTML = ''; // Clear the container
 
+    const filterValue = document.getElementById('slot-filter').value;
+
     playerData.inventory.forEach((item, index) => {
+        if (filterValue !== 'all' && item && item.slot !== filterValue) {
+            return; // Skip items that don't match the filter
+        }
+
         const inventoryItem = document.createElement('div');
         inventoryItem.className = 'inventory-item';
 
@@ -33,14 +39,12 @@ function renderInventory() {
             p.innerText = item.name;
 
             inventoryItem.appendChild(img);
-            // inventoryItem.appendChild(p);
 
             if (item.rarity) {
                 const rarityClass = item.rarity.toLowerCase();
                 inventoryItem.classList.add(rarityClass);
             }
 
-            // Check if the item is equipped and add the 'equipped' class
             const isEquipped = Object.values(playerData.playerEquipped).some(equippedItem => equippedItem && equippedItem.id === item.id);
             if (isEquipped) {
                 inventoryItem.classList.add('equipped');
@@ -56,6 +60,10 @@ function renderInventory() {
         inventoryContainer.appendChild(inventoryItem);
     });
 }
+
+document.getElementById('slot-filter').addEventListener('change', () => {
+    renderInventory();
+});
 
 
 function showItemPopup(item, isEquipped) {
@@ -196,6 +204,12 @@ function showItemPopup(item, isEquipped) {
 }
 
 function recycleItem(item) {
+    // Ask for confirmation before proceeding
+    const confirmRecycle = confirm(`Are you sure you want to recycle ${item.name}?`);
+    if (!confirmRecycle) {
+        return; // Exit the function if the user cancels
+    }
+
     // Find the item's index in the inventory
     const itemIndex = playerData.inventory.findIndex(slot => slot && slot.id === item.id);
 
@@ -233,11 +247,11 @@ function recycleItem(item) {
             if (materialIndex !== -1) {
                 playerData.playerMaterials[materialIndex] = { type: 'emerald', quantity: emeraldsObtained };
             } else {
-                console.log('Materials array is full! Could not add diamond.');
+                console.log('Materials array is full! Could not add emerald.');
             }
         }
 
-        alert(`Recycled ${item.name} and obtained ${emeraldsObtained} diamond(s)!`);
+        alert(`Recycled ${item.name} and obtained ${emeraldsObtained} emerald(s)!`);
 
         savePlayerData();
         renderInventory();
@@ -247,6 +261,7 @@ function recycleItem(item) {
         console.log('Item not found in inventory!');
     }
 }
+
 
 
 function displayMaterials() {
@@ -335,15 +350,23 @@ function openChest(item) {
 
 function equipItem(item) {
     const slot = item.slot;
-    if (playerData.playerEquipped[slot]) {
-        console.log(`Unequipped: ${playerData.playerEquipped[slot].name}`);
+    const currentlyEquippedItem = playerData.playerEquipped[slot];
+    
+    if (currentlyEquippedItem) {
+        const confirmUnequip = confirm(`Are you sure you want to unequip ${currentlyEquippedItem.name}?`);
+        if (!confirmUnequip) {
+            return; // Exit the function if the user cancels
+        }
+        console.log(`Unequipped: ${currentlyEquippedItem.name}`);
     }
+
     playerData.playerEquipped[slot] = item;
     console.log(`Equipped: ${item.name} to ${slot}`);
     savePlayerData();
     renderInventory();
     renderEquippedItems();
 }
+
 
 function unequipItem(item) {
     console.log('unequip')

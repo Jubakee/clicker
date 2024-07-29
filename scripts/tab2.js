@@ -60,7 +60,7 @@ function renderEquippedItems() {
 
     // Display the total stat boosts
     const summaryElement = document.getElementById('equipped-items-summary');
-    summaryElement.innerText = `Total Income Boost: + 💵 ${totalBoost} per second`;
+    summaryElement.innerText = `Total Item Boost: + 💵 ${totalBoost} per second`;
 
     savePlayerData();
 }

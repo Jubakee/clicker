@@ -4,7 +4,29 @@ window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
 //resetGame();
 // Define a player object with default values
+// Get the player's username
+function getPlayerUsername() {
+    const user = window.Telegram.WebApp.initDataUnsafe.user;
+    return user ? user.username : 'Unknown';
+}
 
+// Display the username in the UI
+function displayUsername() {
+    const usernameContainer = document.getElementById('username-container');
+    if (usernameContainer) {
+        const username = getPlayerUsername();
+        usernameContainer.innerText = `Username: ${username}`;
+    }
+}
+
+// Add a container for the username in your HTML
+const headerContainer = document.querySelector('.header-container');
+const usernameContainer = document.createElement('div');
+usernameContainer.id = 'username-container';
+headerContainer.appendChild(usernameContainer);
+
+// Call the displayUsername function to update the UI
+displayUsername();
 
 const playerData = {
     playerId: null,
@@ -165,6 +187,7 @@ function calculateTotalIncome() {
 
 // Function to display a popup with accumulated coins
 function showAccumulatedCoinsPopup(earnedCoins) {
+    formatNumber(earnedCoins)
     const popup = document.createElement('div');
     popup.className = 'popup';
     popup.innerText = `You earned 💵 ${earnedCoins} while you were away!`;
