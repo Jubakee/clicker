@@ -2,6 +2,7 @@ window.Telegram.WebApp.ready();
 window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
 
+resetGame();
 function getUserInfo() {
     // Ensure the initDataUnsafe and user objects are defined
     const initData = window.Telegram.WebApp.initDataUnsafe;
@@ -27,7 +28,7 @@ function displayUserInfo() {
 
     const fullNameContainer = document.getElementById('full-name-container');
     if (fullNameContainer) {
-        fullNameContainer.innerText = `Name: ${userInfo.first_name || 'Unknown'} ${userInfo.last_name || ''}`;
+        fullNameContainer.innerText = `${userInfo.first_name || 'Unknown'} ${userInfo.last_name || ''}`;
     }
 }
 
