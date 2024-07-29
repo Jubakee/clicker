@@ -1,32 +1,52 @@
-// Initialize the Telegram Web App
 window.Telegram.WebApp.ready();
 window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
-//resetGame();
-// Define a player object with default values
-// Get the player's username
-function getPlayerUsername() {
-    const user = window.Telegram.WebApp.initDataUnsafe.user;
-    return user ? user.username : 'Unknown';
-}
 
-// Display the username in the UI
-function displayUsername() {
-    const usernameContainer = document.getElementById('username-container');
-    if (usernameContainer) {
-        const username = getPlayerUsername();
-        usernameContainer.innerText = `Username: ${username}`;
+function getUserInfo() {
+    // Ensure the initDataUnsafe and user objects are defined
+    const initData = window.Telegram.WebApp.initDataUnsafe;
+    if (initData && initData.user) {
+        const { first_name, last_name, username } = initData.user;
+
+        // Log the user information for debugging
+        console.log('User Info:', { first_name, last_name, username });
+
+        // Return the user information
+        return { first_name, last_name, username };
+    } else {
+        console.warn('User information is not available.');
+        return { first_name: 'Unknown', last_name: 'Unknown', username: 'Unknown' };
     }
 }
 
-// Add a container for the username in your HTML
+// Display the username in the UI
+function displayUserInfo() {
+    const userInfo = getUserInfo();
+
+    const usernameContainer = document.getElementById('username-container');
+    if (usernameContainer) {
+        usernameContainer.innerText = `Username: ${userInfo.username || 'Unknown'}`;
+    }
+
+    const fullNameContainer = document.getElementById('full-name-container');
+    if (fullNameContainer) {
+        fullNameContainer.innerText = `Name: ${userInfo.first_name || 'Unknown'} ${userInfo.last_name || ''}`;
+    }
+}
+
+// Add containers for displaying user info in your HTML
 const headerContainer = document.querySelector('.header-container');
+
 const usernameContainer = document.createElement('div');
 usernameContainer.id = 'username-container';
 headerContainer.appendChild(usernameContainer);
 
-// Call the displayUsername function to update the UI
-displayUsername();
+const fullNameContainer = document.createElement('div');
+fullNameContainer.id = 'full-name-container';
+headerContainer.appendChild(fullNameContainer);
+
+// Call the displayUserInfo function to update the UI
+displayUserInfo();
 
 const playerData = {
     playerId: null,
