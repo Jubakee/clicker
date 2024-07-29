@@ -24,7 +24,9 @@ const playerData = {
         bottom: null,
         hand: null,
         feet: null
-    }
+    },
+    playerMaterials: Array(6).fill(null) // 6 slots initialized to null
+
 };
 
 
@@ -90,6 +92,8 @@ function loadPlayerData() {
             hand: null,
             feet: null
         };
+        playerData.playerMaterials = Array(6).fill(null); // Initialize inventory
+
     }
 
     const lastUpdateTime = playerData.playerLastSaved; // Use the last saved time directly
@@ -112,7 +116,10 @@ function loadPlayerData() {
         maxCoinsForNextLevel = calculateMaxCoinsForNextLevel(playerData.playerLevel); // Recalculate for the next level
     }
 
-    showAccumulatedCoinsPopup(elapsedTimeInSeconds); // Show popup for earned coins
+    const totalIncome = calculateTotalIncome();
+    const earnedCoins = totalIncome * elapsedTimeInSeconds;
+
+    showAccumulatedCoinsPopup(earnedCoins); // Show popup for earned coins
 
     // Update player energy based on elapsed time
     if (elapsedTimeInSeconds > 0) {
@@ -123,6 +130,7 @@ function loadPlayerData() {
     playerData.lastEnergyUpdate = now;
 
     updateGameUI(); // Update UI after loading data
+    console.log(playerData.playerMaterials)
 }
 
 // Function to calculate max coins required for the next level
@@ -136,11 +144,30 @@ function calculateMaxCoinsForNextLevel(level) {
 // Initial UI update
 updateGameUI();
 
+
+function calculateTotalIncome() {
+    let baseIncome = playerData.playerIncome; // Assume this is your base income
+    let totalBoost = 0;
+
+    for (let slot in playerData.playerEquipped) {
+        if (playerData.playerEquipped[slot]) {
+            const item = playerData.playerEquipped[slot];
+            const boostMatch = item.description.match(/\+[\D]*([\d]+)/);
+            if (boostMatch) {
+                totalBoost += parseInt(boostMatch[1], 10);
+            }
+        }
+    }
+
+    return baseIncome + totalBoost;
+}
+
+
 // Function to display a popup with accumulated coins
-function showAccumulatedCoinsPopup(accumulatedCoins) {
+function showAccumulatedCoinsPopup(earnedCoins) {
     const popup = document.createElement('div');
     popup.className = 'popup';
-    popup.innerText = `You earned 💵 ${accumulatedCoins} while you were away!`;
+    popup.innerText = `You earned 💵 ${earnedCoins} while you were away!`;
     document.body.appendChild(popup);
 
     // Style the popup

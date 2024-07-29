@@ -33,7 +33,7 @@ function renderInventory() {
             p.innerText = item.name;
 
             inventoryItem.appendChild(img);
-            inventoryItem.appendChild(p);
+            // inventoryItem.appendChild(p);
 
             if (item.rarity) {
                 const rarityClass = item.rarity.toLowerCase();
@@ -69,6 +69,11 @@ function showItemPopup(item, isEquipped) {
         const rarityClass = item.rarity.toLowerCase(); // Match CSS class names in tab4.css
         popup.classList.add(rarityClass);
     }
+
+    const itemSlot = document.createElement('h3');
+    itemSlot.innerText = item.slot.charAt(0).toUpperCase() + item.slot.slice(1);
+    itemSlot.className = 'popup-slot';
+    
 
     const itemImage = document.createElement('img');
     itemImage.src = item.image;
@@ -108,6 +113,16 @@ function showItemPopup(item, isEquipped) {
         });
     }
 
+
+    const recycleButton = document.createElement('button');
+    recycleButton.innerText = 'Recycle';
+    recycleButton.className = 'popup-button';
+    recycleButton.addEventListener('click', () => {
+        recycleItem(item)
+;      closePopup(popupOverlay);
+    });
+
+
     const closeButton = document.createElement('button');
     closeButton.innerText = 'Close';
     closeButton.className = 'popup-button';
@@ -115,10 +130,17 @@ function showItemPopup(item, isEquipped) {
         closePopup(popupOverlay);
     });
 
+    popup.appendChild(itemSlot);
     popup.appendChild(itemImage);
     popup.appendChild(itemName);
     popup.appendChild(itemDescription);
     popup.appendChild(actionButton);
+    if (item.type != 'Chest') {
+        popup.appendChild(recycleButton);
+
+    }
+
+   
     popup.appendChild(closeButton);
 
     popupOverlay.appendChild(popup);
@@ -168,10 +190,69 @@ function showItemPopup(item, isEquipped) {
             cursor: 'pointer',
             backgroundColor: '#333',
             color: '#fff',
-            fontSize: '16px'
+            fontSize: '14px'
         });
     });
 }
+
+function recycleItem(item) {
+    // Find the item's index in the inventory
+    const itemIndex = playerData.inventory.findIndex(slot => slot && slot.id === item.id);
+
+    if (itemIndex !== -1) {
+        // Check if the item is equipped and unequip it if necessary
+        const equippedSlot = Object.keys(playerData.playerEquipped).find(slot => playerData.playerEquipped[slot] && playerData.playerEquipped[slot].id === item.id);
+        if (equippedSlot) {
+            playerData.playerEquipped[equippedSlot] = null;
+            console.log(`Unequipped: ${item.name} from ${equippedSlot}`);
+        }
+
+        // Remove the item by setting its slot to null
+        playerData.inventory[itemIndex] = null;
+
+        // Shift all non-null items to the front
+        playerData.inventory = playerData.inventory.filter(slot => slot !== null);
+
+        // Fill the rest of the inventory with null
+        while (playerData.inventory.length < 20) {
+            playerData.inventory.push(null);
+        }
+
+        // Chance to obtain 1-5 emeralds
+        const emeraldsObtained = Math.floor(Math.random() * 5) + 1;
+
+        // Find if there's already an emerald entry in the materials array
+        const existingEmeraldIndex = playerData.playerMaterials.findIndex(material => material && material.type === 'emerald');
+
+        if (existingEmeraldIndex !== -1) {
+            // Increase the quantity if emerald entry exists
+            playerData.playerMaterials[existingEmeraldIndex].quantity += emeraldsObtained;
+        } else {
+            // Add new entry if there's no existing emerald entry
+            const materialIndex = playerData.playerMaterials.findIndex(material => material === null);
+            if (materialIndex !== -1) {
+                playerData.playerMaterials[materialIndex] = { type: 'emerald', quantity: emeraldsObtained };
+            } else {
+                console.log('Materials array is full! Could not add diamond.');
+            }
+        }
+
+        alert(`Recycled ${item.name} and obtained ${emeraldsObtained} diamond(s)!`);
+
+        savePlayerData();
+        renderInventory();
+        renderEquippedItems();
+        displayMaterials(); // For debugging purposes
+    } else {
+        console.log('Item not found in inventory!');
+    }
+}
+
+
+function displayMaterials() {
+    console.log('Player Materials:', playerData.playerMaterials);
+}
+
 
 function unequipItem2(item) {
     console.log('Unequip item function called for:', item.name);
@@ -279,8 +360,25 @@ function closePopup(popupOverlay) {
     popupOverlay.remove();
 }
 
+function displayMaterials() {
+    const emeraldsQuantity = document.getElementById('emeralds-quantity');
+
+    // Find the emerald material in playerMaterials
+    const emeraldMaterial = playerData.playerMaterials.find(material => material && material.type === 'emerald');
+    
+    // Update the displayed quantity of emeralds
+    emeraldsQuantity.innerText = emeraldMaterial ? emeraldMaterial.quantity : 0; // Show 0 if no emeralds
+
+    // You can add similar code for other materials here
+}
+
+
 // Load and render inventory on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadInventory();
+    displayMaterials(); // Add this line to display materials on load
+
     renderInventory();
+
 });
+

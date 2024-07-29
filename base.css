@@ -42,11 +42,26 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  font-size: 14px;
+
   
 }
 
-#income-container, #level-exp-container {
+/* <div id="materials-container">
+<span id="emeralds-icon">💎</span>
+<span id="emeralds-quantity">0</span>
+<!-- You can add more material displays as needed -->
+</div> */
+/* <span id="emeralds-icon">💎</span>
+<span id="emeralds-quantity">0</span> */
+#emeralds-icon  {
+  font-size: 12px;
+}
+#emeralds-quantity{
+  font-size: 14px;
+  margin-right: 10px;
+}
+#level-exp-container {
   display: flex;
   align-items: center;
   font-size: 14px;

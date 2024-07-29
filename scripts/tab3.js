@@ -56,7 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             rarity: itemRarity,
                             datePurchased: new Date().toISOString(),
                             requirement: itemRequirement,
-                            isOpened: itemIsOpened
+                            isOpened: itemIsOpened,
+                            slot: 'Chest'
                         };
 
                         savePlayerData(); // Save updated player data
