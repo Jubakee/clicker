@@ -2,6 +2,46 @@ window.Telegram.WebApp.ready();
 window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
 
+function getUserInfo() {
+    // Ensure the initDataUnsafe and user objects are defined
+    const initData = window.Telegram.WebApp.initDataUnsafe;
+    if (initData && initData.user) {
+        const { first_name, last_name } = initData.user;
+
+        // Log the user information for debugging
+        console.log('User Info:', { first_name, last_name });
+
+        // Return the user information
+        return { first_name, last_name };
+    } else {
+        console.warn('User information is not available.');
+        return { first_name: 'Unknown', last_name: 'Unknown'};
+    }
+}
+
+// Display the username in the UI
+function displayUserInfo() {
+    const userInfo = getUserInfo();
+
+
+
+    const fullNameContainer = document.getElementById('full-name-container');
+    if (fullNameContainer) {
+        fullNameContainer.innerText = `Name: ${userInfo.first_name || 'Unknown'} ${userInfo.last_name || ''}`;
+    }
+}
+
+// Add containers for displaying user info in your HTML
+const headerContainer = document.querySelector('.header-container');
+
+
+
+const fullNameContainer = document.createElement('div');
+fullNameContainer.id = 'full-name-container';
+headerContainer.appendChild(fullNameContainer);
+
+// Call the displayUserInfo function to update the UI
+displayUserInfo();
 
 const playerData = {
     playerId: null,
@@ -25,27 +65,6 @@ const playerData = {
     playerMaterials: Array(6).fill(null) // 6 slots initialized to null
 
 };
-
-// Initialize the Telegram WebApp
-window.Telegram.WebApp.ready();
-window.Telegram.WebApp.expand();
-window.Telegram.WebApp.disableVerticalSwipes();
-
-function showTelegramData() {
-    // Retrieve initData and initDataUnsafe
-    let initData = window.Telegram.WebApp.initData;
-    let initDataUnsafe = window.Telegram.WebApp.initDataUnsafe;
-
-    // Format the data as a string
-    let dataString = `initData: ${JSON.stringify(initData, null, 2)}\n\ninitDataUnsafe: ${JSON.stringify(initDataUnsafe, null, 2)}`;
-
-    // Show the data in an alert
-    alert(dataString);
-}
-
-// Call the function to display the data
-showTelegramData();
-
 
 
 function resetGame() {
