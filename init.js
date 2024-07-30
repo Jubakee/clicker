@@ -2,7 +2,7 @@ window.Telegram.WebApp.ready();
 window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
 
-resetGame();
+//resetGame();
 function getUserInfo() {
     // Ensure the initDataUnsafe and user objects are defined
     const initData = window.Telegram.WebApp.initDataUnsafe;
