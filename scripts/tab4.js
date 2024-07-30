@@ -67,6 +67,11 @@ document.getElementById('slot-filter').addEventListener('change', () => {
 
 
 function showItemPopup(item, isEquipped) {
+    if (item.type === 'Chest' && item.isOpened === 'false') {
+        openChest(item);
+        return;
+    }
+    
     const popupOverlay = document.createElement('div');
     popupOverlay.className = 'popup-overlay';
 
@@ -99,13 +104,7 @@ function showItemPopup(item, isEquipped) {
     const actionButton = document.createElement('button');
     actionButton.className = 'popup-button';
 
-    if (item.type === 'Chest' && item.isOpened === 'false') {
-        actionButton.innerText = 'Open';
-        actionButton.addEventListener('click', () => {
-            openChest(item);
-            closePopup(popupOverlay);
-        });
-    } else if (isEquipped) {
+ if (isEquipped) {
         actionButton.innerText = 'Unequip';
         console.log(`Setting up Unequip button for: ${item.name}`); // Add this log
         actionButton.addEventListener('click', () => {

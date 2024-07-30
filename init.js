@@ -1,10 +1,12 @@
 window.Telegram.WebApp.ready();
 window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
+let highScores = [];
+
 
 //resetGame();
+
 function getUserInfo() {
-    // Ensure the initDataUnsafe and user objects are defined
     const initData = window.Telegram.WebApp.initDataUnsafe;
     if (initData && initData.user) {
         const { first_name, last_name } = initData.user;
@@ -16,16 +18,13 @@ function getUserInfo() {
         return { first_name, last_name };
     } else {
         console.warn('User information is not available.');
-        return { first_name: 'Unknown', last_name: 'Unknown'};
+        return { first_name: 'Unknown', last_name: 'Unknown'  };
     }
 }
 
 // Display the username in the UI
 function displayUserInfo() {
     const userInfo = getUserInfo();
-
-
-
     const fullNameContainer = document.getElementById('full-name-container');
     if (fullNameContainer) {
         fullNameContainer.innerText = `${userInfo.first_name || 'Unknown'} ${userInfo.last_name || ''}`;
@@ -34,8 +33,6 @@ function displayUserInfo() {
 
 // Add containers for displaying user info in your HTML
 const headerContainer = document.querySelector('.header-container');
-
-
 
 const fullNameContainer = document.createElement('div');
 fullNameContainer.id = 'full-name-container';
@@ -64,13 +61,14 @@ const playerData = {
         feet: null
     },
     playerMaterials: Array(6).fill(null) // 6 slots initialized to null
-
+    
 };
 
 
 function resetGame() {
     // Clear saved data from local storage
     localStorage.removeItem('playerData');
+    localStorage.removeItem('highScores');
 }
 
 // Function to save player data to localStorage
@@ -322,3 +320,4 @@ updateGameUI();
 
 // Inventory Management
 // Move inventory-related functions to tab4.js
+
