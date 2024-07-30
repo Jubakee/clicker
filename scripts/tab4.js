@@ -71,7 +71,7 @@ function showItemPopup(item, isEquipped) {
         openChest(item);
         return;
     }
-    
+
     const popupOverlay = document.createElement('div');
     popupOverlay.className = 'popup-overlay';
 
@@ -344,6 +344,12 @@ function openChest(item) {
 
     savePlayerData();
     renderInventory();
+
+    // Apply animation class to the new item
+    const inventoryContainer = document.querySelector('.inventory-container');
+    const newItemElement = inventoryContainer.children[chestIndex];
+    newItemElement.classList.add('new-item');
+
     console.log(`Opened: ${item.name} and replaced with ${randomItem.name}`);
 }
 
