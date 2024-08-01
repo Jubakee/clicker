@@ -44,6 +44,12 @@
     text-align: center;
 }
 
+.level-summary {
+    margin: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+
 .unequip-button {
     background-color: #333; /* Button background color */
     color: #fff;

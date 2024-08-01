@@ -51,7 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             datePurchased: new Date().toISOString(),
                             requirement: itemRequirement,
                             isOpened: itemIsOpened,
-                            slot: 'Chest'
+                            slot: 'Chest',
+                            level: 0
                         };
 
                         savePlayerData();

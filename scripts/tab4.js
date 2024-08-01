@@ -63,7 +63,7 @@ function renderInventory() {
         
             // Only generate stars if the item is not a chest
             if (item.type !== 'Chest') {
-                starsContainer.innerHTML = generateStars(item.level || 1); // Generate stars based on item level
+                starsContainer.innerHTML = generateStars(0); // Generate stars based on item level
             }
         
             const levelDisplay = document.createElement('p');
@@ -171,22 +171,40 @@ function showItemPopup(item, isEquipped) {
     recycleButton.innerText = 'Recycle';
     recycleButton.className = 'popup-button';
     recycleButton.addEventListener('click', () => {
-        const emeraldsObtained = recycleItem(item); // Call recycleItem
-        if(emeraldsObtained === 0){
-            return;
-        }
-        alert(`You obtained ${emeraldsObtained} emerald(s) from recycling ${item.name}!`); // Alert for recycled item
-        closePopup(popupOverlay);
+        recycleItem(item); // Call recycleItem
+
+        // alert(`You obtained ${emeraldsObtained} 💎(s) from recycling ${item.name}!`); // Alert for recycled item
+        // closePopup(popupOverlay);
     });
     
     const levelUpButton = document.createElement('button');
     levelUpButton.innerText = 'Level Up';
     levelUpButton.className = 'popup-button';
     levelUpButton.addEventListener('click', () => {
-        levelUpItem(item);
-        closePopup(popupOverlay);
+        const originalIncome = item.income; // Store the original income for the animation
+        const levelUpCost = calculateLevelUpCost(item.level); // Calculate the cost before leveling up
+        const descriptionText = itemDescription; // Reference to the description text element
+    
+        // Proceed with leveling up
+        if (levelUpItem(item, popupOverlay)) { // Pass popupOverlay here
+            // If leveling up is successful, keep the popup open and show the animation
+            let newIncome = item.income; // Get the new income after leveling up
+    
+            // Update income for the animation
+            descriptionText.innerText = `+ 💵 ${originalIncome} → ${newIncome} per second`; // Show the transition
+    
+            // Add an animation class for the description text
+            descriptionText.classList.add('income-animation');
+            starsContainer.innerHTML = generateStars(item.level || 1); // Generate stars based on item level
+    
+            // Reset the text after the animation is complete
+            setTimeout(() => {
+                descriptionText.innerText = `+ 💵 ${newIncome} per second`; // Final update of the text
+                descriptionText.classList.remove('income-animation'); // Remove the animation class
+            }, 1000); // Adjust the timeout to match your animation duration
+        }
     });
-
+    
 
 
     const closeButton = document.createElement('button');
@@ -268,6 +286,7 @@ function showItemPopup(item, isEquipped) {
     });
 }
 
+
 function generateStars(level) {
     const maxStars = 5; // Maximum number of stars
     let stars = '';
@@ -281,11 +300,11 @@ function generateStars(level) {
     return stars; // Return the star representation
 }
 
-function levelUpItem(item) {
+function levelUpItem(item, popupOverlay) { // Add popupOverlay parameter
     if (item.level >= 5) {
         alert(`${item.name} has already reached the maximum level.`);
-        console.log(`${item.name} is at the maximum level of 3.`);
-        return;
+        console.log(`${item.name} is at the maximum level of 5.`);
+        return false; // Indicate that leveling up failed
     }
 
     const levelUpCost = calculateLevelUpCost(item.level); // Calculate cost based on the item's current level
@@ -297,27 +316,128 @@ function levelUpItem(item) {
         if (confirmation) {
             playerData.playerBalance -= levelUpCost; // Deduct the cost from the player's balance
 
+            // Check for risk factor if leveling from level 3 or higher
+            if (item.level >= 3) {
+                console.log('level 3')
+                const successChance = item.level === 3 ? 0.1 : item.level === 4 ? 0.05 : 0; // 80% for level 3 to 4, 70% for level 4 to 5
+                const isSuccess = Math.random() < successChance; // Randomly determine success based on chance
+
+                if (!isSuccess) {
+                    // Animate item failure (you can replace this with your animation logic)
+                    // notifyUser(`${item.name} has perished during the level-up! You receive some materials instead.`, 'error');
+
+                    // Here, you can add logic to convert the item into materials
+                    convertItemToMaterials(item, popupOverlay);
+          
+                    return false; // Indicate that leveling up failed
+                }
+            }
+
+            // Proceed with leveling up the item if it was successful
             item.level += 1; // Increase the item's level by 1
             item.income += item.income; // Increase the item's income
 
             console.log(`Income after level up: ${item.income}`);
             console.log(`Leveled up ${item.name} to level ${item.level}`);
 
-            // Save player data and refresh the inventory
+            // Save player data
             savePlayerData();
-            renderInventory();
-            renderEquippedItems();
 
-            alert(`You successfully leveled up ${item.name} to level ${item.level}! It cost 💵 ${levelUpCost.toLocaleString()}.`);
+            // notifyUser(`${item.name} leveled up to level ${item.level}!`, 'success');
+            return true; // Indicate that leveling up was successful
         } else {
             alert(`Level up of ${item.name} was canceled.`);
+            return false; // Indicate that leveling up failed
         }
     } else {
         alert(`You do not have enough coins to level up ${item.name}. Required: 💵 ${levelUpCost.toLocaleString()}, Current: 💵 ${playerData.playerBalance.toLocaleString()}`);
         console.log(`Not enough coins to level up ${item.name}. Required: ${levelUpCost}, Current: ${playerData.playerBalance}`);
+        return false; // Indicate that leveling up failed
     }
 }
 
+// Function to close the popup
+function closePopup(popupOverlay) {
+    popupOverlay.remove();
+}
+
+
+// Function to notify the user
+function notifyUser(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerText = message;
+    document.body.appendChild(notification);
+
+    // Style the notification (you can customize this)
+    Object.assign(notification.style, {
+        position: 'fixed',
+        top: '20%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: type === 'error' ? '#ff4d4d' : '#4CAF50',
+        color: '#fff',
+        padding: '10px',
+        zIndex: '1000',
+        borderRadius: '5px'
+    });
+
+    // Remove the notification after 3 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+
+// Function to convert item to materials
+function convertItemToMaterials(item, popupOverlay) {
+     // Display a message indicating failure
+     alert(`Uh oh! The item "${item.name}" has been destroyed!`);
+
+     // Remove the item from the inventory using its ID
+     playerData.inventory = playerData.inventory.filter(slot => slot && slot.id !== item.id);
+ 
+     // Fill the rest of the inventory with null to maintain length
+     while (playerData.inventory.length < 20) {
+         playerData.inventory.push(null);
+     }
+ 
+
+     
+     // Update the inventory display
+
+    // Define how many materials are obtained based on the item's level or type
+    let materialsObtained = {
+        emerald: item.level * 2, // Example: 2 emeralds per item level
+        // You can add more material types if needed
+    };
+
+    // Add materials to playerData.playerMaterials
+    const existingEmeraldIndex = playerData.playerMaterials.findIndex(material => material && material.type === 'emerald');
+
+    // Update materials based on the obtained amount
+    if (existingEmeraldIndex !== -1) {
+        playerData.playerMaterials[existingEmeraldIndex].quantity += materialsObtained.emerald;
+    } else {
+        const materialIndex = playerData.playerMaterials.findIndex(material => material === null);
+        if (materialIndex !== -1) {
+            playerData.playerMaterials[materialIndex] = { type: 'emerald', quantity: materialsObtained.emerald };
+        } else {
+            console.log('Materials array is full! Could not add 💎.');
+        }
+    }
+
+
+    savePlayerData();
+    renderInventory();
+    renderEquippedItems();
+    displayMaterials(); // For debugging purposes
+    alert(`"${item.name}" has been removed from your inventory BUT you gained ${materialsObtained.emerald} 💎(s) in the process!.`);
+    closePopup(popupOverlay); // Close the popup if leveling fails
+    // You can implement similar logic for other materials based on item type
+}
+
+
 // Function to calculate the cost of leveling up based on the item's current level
 function calculateLevelUpCost(currentLevel) {
     return Math.floor(100 * Math.pow(1.5, currentLevel)); // Example cost calculation formula
@@ -326,7 +446,7 @@ function calculateLevelUpCost(currentLevel) {
 
 // Function to calculate the cost of leveling up based on the item's current level
 function calculateLevelUpCost(currentLevel) {
-    return Math.floor(100 * Math.pow(1.5, currentLevel)); // Example cost calculation formula
+    return Math.floor(1 * Math.pow(1.5, currentLevel)); // Example cost calculation formula
 }
 
 
@@ -359,6 +479,7 @@ function recycleItem(item) {
 
                 // Calculate emeralds based on item level and a range
                 const emeraldsFromItem = calculateEmeraldsFromItemLevel(item.level);
+      
 
                 emeraldsObtained += emeraldsFromItem;
                 console.log(`Recycled ${item.name} (Level ${item.level}) and obtained ${emeraldsFromItem} emeralds!`);
@@ -382,7 +503,7 @@ function recycleItem(item) {
             if (materialIndex !== -1) {
                 playerData.playerMaterials[materialIndex] = { type: 'emerald', quantity: emeraldsObtained };
             } else {
-                console.log('Materials array is full! Could not add emerald.');
+                console.log('Materials array is full! Could not add 💎.');
             }
         }
 
@@ -405,6 +526,8 @@ function calculateEmeraldsFromItemLevel(level) {
         1: [1, 5],
         2: [5, 10],
         3: [10, 15],
+        4: [15, 20],
+        5: [20,25]
         // Add more levels as needed
     };
 
@@ -415,7 +538,6 @@ function calculateEmeraldsFromItemLevel(level) {
     const emeraldsObtained = Math.floor(Math.random() * (range[1] - range[0] + 1)) + range[0];
     return emeraldsObtained;
 }
-
 
 function recycleSelectedItems() {
     if (selectedItems.size === 0) {
@@ -429,25 +551,33 @@ function recycleSelectedItems() {
     }
 
     let totalEmeraldsObtained = 0;
-    const itemsToRecycle = Array.from(selectedItems); // Create an array from the Set to avoid mutation during iteration
+
+    // Create an array from the selected items
+    const itemsToRecycle = Array.from(selectedItems);
+
+
+    // Sort selected items in descending order
+    itemsToRecycle.sort((a, b) => b - a);
 
     // Loop through the selected items to recycle
     itemsToRecycle.forEach(index => {
         const item = playerData.inventory[index];
         if (item) {
+            if(item.type === 'Chest'){
+                alert(`Can't recycle Chests!`);
+                return;
+            }
             totalEmeraldsObtained += recycleItem(item); // Accumulate emeralds obtained from recycling
+            console.log(item)
+        
+            alert(`Recycled item and obtained a total of ${totalEmeraldsObtained} 💎(s)!`);
+
+            // Remove the item by setting its slot to null using its ID
+            playerData.inventory = playerData.inventory.filter(slot => slot && slot.id !== item.id);
         }
     });
 
-    // Remove recycled items from the inventory
-    itemsToRecycle.forEach(index => {
-        playerData.inventory[index] = null; // Set recycled items to null
-    });
-
-    // Clean up the inventory and shift items
-    playerData.inventory = playerData.inventory.filter(slot => slot !== null);
-
-    // Fill the rest of the inventory with null
+    // Fill the rest of the inventory with null to maintain length
     while (playerData.inventory.length < 20) {
         playerData.inventory.push(null);
     }
@@ -455,7 +585,6 @@ function recycleSelectedItems() {
     // Clear the selected items set
     selectedItems.clear();
 
-    alert(`Recycled all selected items and obtained a total of ${totalEmeraldsObtained} emerald(s)!`);
 
     savePlayerData();
     renderInventory();
@@ -463,12 +592,6 @@ function recycleSelectedItems() {
     displayMaterials(); // For debugging purposes
 }
 
-
-
-
-function displayMaterials() {
-    console.log('Player Materials:', playerData.playerMaterials);
-}
 
 
 function unequipItem2(item) {
@@ -483,16 +606,7 @@ function unequipItem2(item) {
     }
 }
 
-// Function to close the popup
-function closePopup(popupOverlay) {
-    popupOverlay.remove();
-}
 
-// Load and render inventory on page load
-document.addEventListener('DOMContentLoaded', () => {
-    loadInventory();
-    renderInventory();
-});
 
 
 function unequipItem(item) {
@@ -506,18 +620,6 @@ function unequipItem(item) {
         renderEquippedItems();
     }
 }
-
-// Function to close the popup
-function closePopup(popupOverlay) {
-    
-    popupOverlay.remove();
-}
-
-// Load and render inventory on page load
-document.addEventListener('DOMContentLoaded', () => {
-    loadInventory();
-    renderInventory();
-});
 
 function addItemToInventory(itemPool) {
     const newItem = itemPool[Math.floor(Math.random() * itemPool.length)]();
@@ -570,20 +672,6 @@ function equipItem(item) {
 }
 
 
-function unequipItem(item) {
-    console.log('unequip')
-    const slot = item.slot;
-    playerData.playerEquipped[slot] = null;
-    console.log(`Unequipped: ${item.name} from ${slot}`);
-    savePlayerData();
-    renderInventory();
-    renderEquippedItems();
-}
-
-// Function to close the popup
-function closePopup(popupOverlay) {
-    popupOverlay.remove();
-}
 
 function displayMaterials() {
     const emeraldsQuantity = document.getElementById('emeralds-quantity');

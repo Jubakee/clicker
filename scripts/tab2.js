@@ -54,25 +54,40 @@ function renderEquippedItems() {
             // Extract and sum up the stat boost from the item description
             const boostMatch = equippedItem.income;
 
+            if(equippedItem.income === 0){
+           
+                boostMatch = playerData.playerIncome;
+            }
 
-            console.log(boostMatch)
+
 
             if (boostMatch) {
                 totalBoost += parseInt(boostMatch, 10);
             }
+            playerData.playerIncome = playerData.baseIncome + totalBoost;
+
+            // Display the total stat boosts
+            const summaryElement = document.getElementById('equipped-items-summary');
+            summaryElement.innerText = `Total Item Boost: + 💵 ${totalBoost} per second`;
+        
+            const levelSummaryElement = document.getElementById('level-summary');
+            levelSummaryElement.innerText = `Level Boost: + 💵 ${playerData.playerIncome} per second`;
+
+     
+
         } else {
+            const summaryElement = document.getElementById('equipped-items-summary');
+            summaryElement.innerText = `Total Item Boost: + 💵 ${totalBoost} per second`;
+        
+            const levelSummaryElement = document.getElementById('level-summary');
+            levelSummaryElement.innerText = `Level Boost: + 💵 ${playerData.playerIncome} per second`;
             slotElement.innerText = 'No item equipped';
         }
     });
-
-    // Set player income to base value before recalculating total boost
-    playerData.playerIncome = playerData.baseIncome + totalBoost;
-
-    // Display the total stat boosts
-    const summaryElement = document.getElementById('equipped-items-summary');
-    summaryElement.innerText = `Total Item Boost: + 💵 ${totalBoost} per second`;
-
+    updateGameUI(); // Update the UI to reflect the new balance and energy
     savePlayerData();
+    // Set player income to base value before recalculating total boost
+   
 }
 
 // Function to unequip an item

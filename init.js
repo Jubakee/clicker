@@ -3,8 +3,8 @@ window.Telegram.WebApp.expand();
 window.Telegram.WebApp.disableVerticalSwipes();
 let highScores = [];
 
-
-//resetGame();
+// Reset Game
+// resetGame();
 
 function getUserInfo() {
     const initData = window.Telegram.WebApp.initDataUnsafe;
@@ -61,14 +61,12 @@ const playerData = {
         feet: null
     },
     playerMaterials: Array(6).fill(null) // 6 slots initialized to null
-    
 };
 
 document.addEventListener('DOMContentLoaded', () => {
     const resetButton = document.getElementById('reset-button');
     resetButton.addEventListener('click', resetGame);
 });
-
 
 function resetGame() {
     // Clear saved data from local storage
@@ -81,15 +79,17 @@ function resetGame() {
 // Function to save player data to localStorage
 function savePlayerData() {
     playerData.playerLastSaved = Date.now();
+
     localStorage.setItem('playerData', JSON.stringify(playerData));
 }
 
-
 function loadPlayerData() {
     const savedData = localStorage.getItem('playerData'); // Get saved data
+ 
+
     if (savedData) {
         Object.assign(playerData, JSON.parse(savedData)); // Update playerData with saved data
-
+        console.log('Loaded Player Data:', playerData); // Debugging output
         // Ensure inventory is properly initialized
         if (!Array.isArray(playerData.inventory)) {
             playerData.inventory = Array(20).fill(null);
@@ -136,7 +136,6 @@ function loadPlayerData() {
             feet: null
         };
         playerData.playerMaterials = Array(6).fill(null); // Initialize inventory
-
     }
 
     const lastUpdateTime = playerData.playerLastSaved; // Use the last saved time directly
@@ -151,13 +150,8 @@ function loadPlayerData() {
     // Update player experience based on elapsed time
     playerData.playerLvlEXP += elapsedTimeInSeconds * playerData.playerIncome;
 
-    // Handle leveling up if experience surpasses the requirement for the next level
-    let maxCoinsForNextLevel = calculateMaxCoinsForNextLevel(playerData.playerLevel);
-    while (playerData.playerLvlEXP >= maxCoinsForNextLevel) {
-        playerData.playerLevel += 1; // Level up
-        playerData.playerLvlEXP -= maxCoinsForNextLevel; // Deduct the experience required for the next level
-        maxCoinsForNextLevel = calculateMaxCoinsForNextLevel(playerData.playerLevel); // Recalculate for the next level
-    }
+    // Call levelUp function to handle leveling logic
+ 
 
     const totalIncome = calculateTotalIncome();
     const earnedCoins = totalIncome * elapsedTimeInSeconds;
@@ -173,7 +167,7 @@ function loadPlayerData() {
     playerData.lastEnergyUpdate = now;
 
     updateGameUI(); // Update UI after loading data
-    console.log(playerData.playerMaterials)
+    //console.log(playerData.playerMaterials);
 }
 
 // Function to calculate max coins required for the next level
@@ -187,7 +181,6 @@ function calculateMaxCoinsForNextLevel(level) {
 // Initial UI update
 updateGameUI();
 
-
 function calculateTotalIncome() {
     let baseIncome = playerData.playerIncome; // Assume this is your base income
     let totalBoost = 0;
@@ -195,16 +188,15 @@ function calculateTotalIncome() {
     for (let slot in playerData.playerEquipped) {
         if (playerData.playerEquipped[slot]) {
             const item = playerData.playerEquipped[slot];
-            const boostMatch = item.description.match(/\+[\D]*([\d]+)/);
+            const boostMatch = item.income;
             if (boostMatch) {
-                totalBoost += parseInt(boostMatch[1], 10);
+                totalBoost += parseInt(boostMatch, 10);
             }
         }
     }
 
     return baseIncome + totalBoost;
 }
-
 
 // Function to display a popup with accumulated coins
 function showAccumulatedCoinsPopup(earnedCoins) {
@@ -233,6 +225,33 @@ function showAccumulatedCoinsPopup(earnedCoins) {
 
 // Load player data on initialization
 loadPlayerData();
+
+
+// Function to handle leveling up
+function levelUp() {
+    let maxCoinsForNextLevel = calculateMaxCoinsForNextLevel(playerData.playerLevel);
+    while (playerData.playerLvlEXP >= maxCoinsForNextLevel) {
+        playerData.playerLevel += 1; // Level up
+        playerData.playerLvlEXP -= maxCoinsForNextLevel; // Deduct the experience required for the next level
+        
+        // Increase playerIncome by 1 for each level up
+        playerData.playerIncome += 1;
+
+        const levelSummaryElement = document.getElementById('level-summary');
+        levelSummaryElement.innerText = `Level Boost: + 💵 ${playerData.playerIncome} per second`;
+
+        maxCoinsForNextLevel = calculateMaxCoinsForNextLevel(playerData.playerLevel); // Recalculate for the next level
+      
+  
+        updateGameUI(); // Update the UI to reflect the new balance and energy
+        savePlayerData(); // Save updated player data
+  
+        // Optionally, you can call a function to display level-up message here
+        // displayLevelUpMessage();
+
+    }
+}
+
 
 // Function to update the game UI
 function updateGameUI() {
@@ -273,45 +292,12 @@ function updateBalance() {
     playerData.playerBalance += playerData.playerIncome; // Increase balance by player income
     playerData.playerLvlEXP += playerData.playerIncome; // Update playerLvlEXP with income
 
-    const maxCoinsForNextLevel = calculateMaxCoinsForNextLevel(playerData.playerLevel);
-    
-    // Check if the player has enough experience to level up
-    if (playerData.playerLvlEXP >= maxCoinsForNextLevel) {
-        playerData.playerLevel += 1; // Level up
-        playerData.playerLvlEXP = 0; // Reset experience for the next level
-        // displayLevelUpMessage(); // Show a message indicating the level up
-        resetLevelBar(); // Reset the level bar
-        savePlayerData(); // Save updated player data
-    }
+    // Call levelUp function to handle leveling logic
+    levelUp();
 
     updateGameUI(); // Update the UI
     savePlayerData(); // Save updated player data
 }
-
-// // Function to display level up message
-// function displayLevelUpMessage() {
-//     const levelUpPopup = document.createElement('div');
-//     levelUpPopup.className = 'popup';
-//     levelUpPopup.innerText = `Congratulations! You've reached Level ${playerData.playerLevel}!`;
-//     document.body.appendChild(levelUpPopup);
-
-//     // Style the level up popup
-//     Object.assign(levelUpPopup.style, {
-//         position: 'fixed',
-//         top: '50%',
-//         left: '50%',
-//         transform: 'translate(-50%, -50%)',
-//         backgroundColor: '#fff',
-//         padding: '20px',
-//         boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
-//         zIndex: '1000'
-//     });
-
-//     // Remove the level up popup after 2 seconds
-//     setTimeout(() => {
-//         levelUpPopup.remove();
-//     }, 2000);
-// }
 
 // Function to reset the level bar for the next level
 function resetLevelBar() {
@@ -326,4 +312,3 @@ updateGameUI();
 
 // Inventory Management
 // Move inventory-related functions to tab4.js
-
