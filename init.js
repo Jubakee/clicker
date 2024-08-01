@@ -64,11 +64,18 @@ const playerData = {
     
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+    const resetButton = document.getElementById('reset-button');
+    resetButton.addEventListener('click', resetGame);
+});
+
 
 function resetGame() {
     // Clear saved data from local storage
     localStorage.removeItem('playerData');
     localStorage.removeItem('highScores');
+
+    location.reload();
 }
 
 // Function to save player data to localStorage
@@ -201,10 +208,9 @@ function calculateTotalIncome() {
 
 // Function to display a popup with accumulated coins
 function showAccumulatedCoinsPopup(earnedCoins) {
-    formatNumber(earnedCoins)
     const popup = document.createElement('div');
     popup.className = 'popup';
-    popup.innerText = `You earned 💵 ${earnedCoins} while you were away!`;
+    popup.innerText = `You earned 💵 ${earnedCoins.toLocaleString()} while you were away!`;
     document.body.appendChild(popup);
 
     // Style the popup

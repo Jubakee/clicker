@@ -27,6 +27,11 @@ function renderEquippedItems() {
             itemDescription.className = 'equipped-item-description';
             itemDescription.innerText = equippedItem.description;
 
+            // Create a container for stars
+            const starsContainer = document.createElement('div');
+            starsContainer.className = 'stars-container';
+            starsContainer.innerHTML = generateStars(equippedItem.level || 1); // Generate stars based on item level
+
             const unequipButton = document.createElement('button');
             unequipButton.innerText = 'Unequip';
             unequipButton.className = 'unequip-button';
@@ -37,6 +42,7 @@ function renderEquippedItems() {
             slotElement.appendChild(itemImage);
             slotElement.appendChild(itemName);
             slotElement.appendChild(itemDescription);
+            slotElement.appendChild(starsContainer); // Add stars to the equipped item slot
             slotElement.appendChild(unequipButton);
 
             // Add rarity class to the equipped item
@@ -81,4 +87,4 @@ function unequipItem(slot) {
 }
 
 // Example base income initialization
-playerData.baseIncome = 1 // or set this to your game's base income value
+playerData.baseIncome = 1; // or set this to your game's base income value

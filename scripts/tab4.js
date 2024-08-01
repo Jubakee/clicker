@@ -57,13 +57,29 @@ function renderInventory() {
             img.src = item.image;
             img.alt = item.name;
             img.className = 'inventory-image';
-
-            const p = document.createElement('p');
-            p.className = 'inventory-name';
-            p.innerText = item.name;
-
+        
+            const starsContainer = document.createElement('div');
+            starsContainer.className = 'stars-container';
+        
+            // Only generate stars if the item is not a chest
+            if (item.type !== 'Chest') {
+                starsContainer.innerHTML = generateStars(item.level || 1); // Generate stars based on item level
+            }
+        
+            const levelDisplay = document.createElement('p');
+            levelDisplay.className = 'inventory-level';
+            // levelDisplay.innerText = `Level: ${item.level || 1}`; // Display level
+        
             inventoryItem.appendChild(img);
-            inventoryItem.appendChild(p);
+            inventoryItem.appendChild(starsContainer); // Add stars to inventory item
+            // inventoryItem.appendChild(levelDisplay); // Add level display
+        
+            // inventoryItem.appendChild(levelDisplay); // Add level display
+
+            // const p = document.createElement('p');
+            // p.className = 'inventory-name';
+            // p.innerText = item.name; // Keep item name for reference or later use
+            // inventoryItem.appendChild(p); // Optional: You can choose to keep this or not
 
             if (item.rarity) {
                 const rarityClass = item.rarity.toLowerCase();
@@ -88,6 +104,7 @@ function renderInventory() {
         inventoryContainer.appendChild(inventoryItem);
     });
 }
+
 
 document.getElementById('slot-filter').addEventListener('change', () => {
     renderInventory();
@@ -162,7 +179,15 @@ function showItemPopup(item, isEquipped) {
         closePopup(popupOverlay);
     });
     
-    
+    const levelUpButton = document.createElement('button');
+    levelUpButton.innerText = 'Level Up';
+    levelUpButton.className = 'popup-button';
+    levelUpButton.addEventListener('click', () => {
+        levelUpItem(item);
+        closePopup(popupOverlay);
+    });
+
+
 
     const closeButton = document.createElement('button');
     closeButton.innerText = 'Close';
@@ -171,10 +196,17 @@ function showItemPopup(item, isEquipped) {
         closePopup(popupOverlay);
     });
 
+    const starsContainer = document.createElement('div');
+    starsContainer.className = 'stars-container';
+    starsContainer.innerHTML = generateStars(item.level || 1); // Generate stars based on item level
+    
     popup.appendChild(itemSlot);
+    popup.appendChild(starsContainer); // Add stars to the popup
+
     popup.appendChild(itemImage);
     popup.appendChild(itemName);
     popup.appendChild(itemDescription);
+    popup.appendChild(levelUpButton); // Add the button to the popup
     popup.appendChild(actionButton);
     if (item.type != 'Chest') {
         popup.appendChild(recycleButton);
@@ -236,10 +268,43 @@ function showItemPopup(item, isEquipped) {
     });
 }
 
-function recycleItem(item) {
-    // Check if the item is equipped
-    const slot = Object.keys(playerData.playerEquipped).find(key => playerData.playerEquipped[key] && playerData.playerEquipped[key].id === item.id);
+function generateStars(level) {
+    const maxStars = 3; // Maximum number of stars
+    let stars = '';
+    for (let i = 0; i < maxStars; i++) {
+        if (i < level) {
+            stars += '★'; // Filled star
+        } else {
+            stars += '☆'; // Empty star
+        }
+    }
+    return stars; // Return the star representation
+}
+
+function levelUpItem(item) {
+    if (!item.level) {
+        item.level = 1; // Initialize level if not set
+    } else {
+        item.level += 1; // Increase level by 1
+    }
     
+
+
+    // Update item's attributes based on the new level, if applicable
+    // For example, you can increase its stats, rarity, etc.
+    console.log(`Leveled up ${item.name} to level ${item.level}`);
+    
+    // Save player data and refresh the inventory
+    savePlayerData();
+    renderInventory();
+    renderEquippedItems();
+}
+
+function recycleItem(item) {
+    const slot = Object.keys(playerData.playerEquipped).find(key => playerData.playerEquipped[key] && playerData.playerEquipped[key].id === item.id);
+    let emeraldsObtained = 0;
+
+    // Check if the item is equipped
     if (slot) {
         const confirmRecycle = confirm(`You are recycling an equipped item: ${item.name}. Are you sure?`);
         if (!confirmRecycle) {
@@ -247,19 +312,25 @@ function recycleItem(item) {
         }
     }
 
-    // Find the item's index in the inventory
-    const itemIndex = playerData.inventory.findIndex(slot => slot && slot.id === item.id);
-    let emeraldsObtained = 0;
+    // Loop through the inventory to find and recycle all instances of the item
+    let itemCount = playerData.inventory.filter(slot => slot && slot.id === item.id).length;
 
-    if (itemIndex !== -1) {
-        // Check if the item is equipped and unequip it if necessary
-        if (slot) {
-            playerData.playerEquipped[slot] = null;
-            console.log(`Unequipped: ${item.name} from ${slot}`);
+    if (itemCount > 0) {
+        for (let i = 0; i < playerData.inventory.length; i++) {
+            if (playerData.inventory[i] && playerData.inventory[i].id === item.id) {
+                // Check if the item is equipped and unequip it if necessary
+                if (slot) {
+                    playerData.playerEquipped[slot] = null;
+                    console.log(`Unequipped: ${item.name} from ${slot}`);
+                }
+
+                // Remove the item by setting its slot to null
+                playerData.inventory[i] = null;
+
+                emeraldsObtained += Math.floor(Math.random() * 5) + 1; // Chance to obtain 1-5 emeralds
+                console.log(`Recycled ${item.name} and obtained emeralds!`);
+            }
         }
-
-        // Remove the item by setting its slot to null
-        playerData.inventory[itemIndex] = null;
 
         // Shift all non-null items to the front
         playerData.inventory = playerData.inventory.filter(slot => slot !== null);
@@ -269,17 +340,11 @@ function recycleItem(item) {
             playerData.inventory.push(null);
         }
 
-        // Chance to obtain 1-5 emeralds
-        emeraldsObtained = Math.floor(Math.random() * 5) + 1;
-
-        // Find if there's already an emerald entry in the materials array
+        // Add emeralds to player's materials
         const existingEmeraldIndex = playerData.playerMaterials.findIndex(material => material && material.type === 'emerald');
-
         if (existingEmeraldIndex !== -1) {
-            // Increase the quantity if emerald entry exists
             playerData.playerMaterials[existingEmeraldIndex].quantity += emeraldsObtained;
         } else {
-            // Add new entry if there's no existing emerald entry
             const materialIndex = playerData.playerMaterials.findIndex(material => material === null);
             if (materialIndex !== -1) {
                 playerData.playerMaterials[materialIndex] = { type: 'emerald', quantity: emeraldsObtained };
@@ -288,13 +353,59 @@ function recycleItem(item) {
             }
         }
 
-        console.log(`Recycled ${item.name} and obtained ${emeraldsObtained} emerald(s)!`);
+        return emeraldsObtained; // Return the number of emeralds obtained
     } else {
         console.log('Item not found in inventory!');
+        return 0; // No items recycled
+    }
+}
+
+function recycleSelectedItems() {
+    if (selectedItems.size === 0) {
+        alert("No items are selected to recycle.");
+        return; // Exit the function if no items are selected
     }
 
-    return emeraldsObtained; // Return the number of emeralds obtained
+    const confirmRecycleAll = confirm("Are you sure you want to recycle all selected items?");
+    if (!confirmRecycleAll) {
+        return; // Exit the function if the user cancels
+    }
+
+    let totalEmeraldsObtained = 0;
+    const itemsToRecycle = Array.from(selectedItems); // Create an array from the Set to avoid mutation during iteration
+
+    // Loop through the selected items to recycle
+    itemsToRecycle.forEach(index => {
+        const item = playerData.inventory[index];
+        if (item) {
+            totalEmeraldsObtained += recycleItem(item); // Accumulate emeralds obtained from recycling
+        }
+    });
+
+    // Remove recycled items from the inventory
+    itemsToRecycle.forEach(index => {
+        playerData.inventory[index] = null; // Set recycled items to null
+    });
+
+    // Clean up the inventory and shift items
+    playerData.inventory = playerData.inventory.filter(slot => slot !== null);
+
+    // Fill the rest of the inventory with null
+    while (playerData.inventory.length < 20) {
+        playerData.inventory.push(null);
+    }
+
+    // Clear the selected items set
+    selectedItems.clear();
+
+    alert(`Recycled all selected items and obtained a total of ${totalEmeraldsObtained} emerald(s)!`);
+
+    savePlayerData();
+    renderInventory();
+    renderEquippedItems();
+    displayMaterials(); // For debugging purposes
 }
+
 
 
 
@@ -429,30 +540,7 @@ function displayMaterials() {
     // You can add similar code for other materials here
 }
 
-function recycleSelectedItems() {
-    const confirmRecycleAll = confirm("Are you sure you want to recycle all selected items?");
-    if (!confirmRecycleAll) {
-        return; // Exit the function if the user cancels
-    }
 
-    let totalEmeraldsObtained = 0;
-    selectedItems.forEach(index => {
-        const item = playerData.inventory[index];
-        if (item) {
-            totalEmeraldsObtained += recycleItem(item, false); // Recycle without confirmation for each item and accumulate emeralds obtained
-        }
-    });
-
-    // Clear the selected items set
-    selectedItems.clear();
-
-    alert(`Recycled all selected items and obtained a total of ${totalEmeraldsObtained} emerald(s)!`);
-
-    savePlayerData();
-    renderInventory();
-    renderEquippedItems();
-    displayMaterials(); // For debugging purposes
-}
 
 // Attach the recycleSelectedItems function to the Recycle All button
 document.getElementById('recycle-all-button').addEventListener('click', recycleSelectedItems);
