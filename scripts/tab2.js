@@ -52,9 +52,13 @@ function renderEquippedItems() {
             }
 
             // Extract and sum up the stat boost from the item description
-            const boostMatch = equippedItem.description.match(/\+[\D]*([\d]+)/);
+            const boostMatch = equippedItem.income;
+
+
+            console.log(boostMatch)
+
             if (boostMatch) {
-                totalBoost += parseInt(boostMatch[1], 10);
+                totalBoost += parseInt(boostMatch, 10);
             }
         } else {
             slotElement.innerText = 'No item equipped';

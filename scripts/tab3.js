@@ -13,42 +13,36 @@ document.addEventListener("DOMContentLoaded", () => {
             const shopItem = event.target.closest(".shop-item");
             const itemId = shopItem.getAttribute("data-item-id");
             const itemName = shopItem.querySelector("h3").innerText;
-            const itemDescription = shopItem.querySelector(".item-description").innerText; // Get item description
-            const itemImage = shopItem.querySelector(".shop-image").src; // Get item image
+            const itemDescription = shopItem.querySelector(".item-description").innerText;
+            const itemImage = shopItem.querySelector(".shop-image").src;
             
-            // Select the price element and format it
             const itemPriceText = shopItem.querySelector(".item-price").innerText;
-            const itemPrice = parseFloat(itemPriceText.replace(/[^0-9.-]+/g, "")); // Remove currency symbol and commas
-
-            // Define additional properties for the inventory item
+            const itemPrice = parseFloat(itemPriceText.replace(/[^0-9.-]+/g, ""));
+            
             const itemType = shopItem.getAttribute("data-item-type") || "Unknown";
             const itemRarity = shopItem.getAttribute("data-item-rarity") || "Common";
             const itemRequirement = shopItem.getAttribute("data-item-requirement") || "None";
-            const itemRequirementLevel = parseInt(itemRequirement.replace(/[^0-9]/g, ""), 10); // Extract numeric level requirement
+            const itemRequirementLevel = parseInt(itemRequirement.replace(/[^0-9]/g, ""), 10);
             
             const itemIsOpened = shopItem.getAttribute("data-item-opened") || "false";
-            // Check player level
+
             if (playerData.playerLevel < itemRequirementLevel) {
                 alert(`You need to be at least level ${itemRequirementLevel} to purchase ${itemName}.`);
                 console.log(`Player level too low to purchase ${itemName}. Required: ${itemRequirementLevel}, Current: ${playerData.playerLevel}`);
                 return;
             }
 
-            // Check player coin balance
             if (playerData.playerBalance >= itemPrice) {
-                // Show confirmation popup
                 const confirmation = confirm(`Are you sure you want to purchase ${itemName} for 💵 ${itemPrice.toLocaleString()}?`);
                 
                 if (confirmation) {
-                    playerData.playerBalance -= itemPrice; // Deduct the price from player balance
+                    playerData.playerBalance -= itemPrice;
 
-                    // Find the first empty slot in the inventory
                     const emptySlotIndex = playerData.inventory.findIndex(slot => slot === null);
 
                     if (emptySlotIndex !== -1) {
-                        // Add the purchased item to the inventory
                         playerData.inventory[emptySlotIndex] = {
-                            inventoryId: emptySlotIndex + 1, // Use slot index + 1 as inventoryId
+                            inventoryId: emptySlotIndex + 1,
                             name: itemName,
                             description: itemDescription,
                             image: itemImage,
@@ -60,12 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             slot: 'Chest'
                         };
 
-                        savePlayerData(); // Save updated player data
+                        savePlayerData();
                         console.log(`You purchased ${itemName} for 💵 ${itemPrice.toLocaleString()}.`);
                         alert(`You successfully purchased ${itemName}!`);
-                        updateGameUI(); // Update UI to reflect new balance
+                        updateGameUI();
 
-                        // For test purposes, log the inventory
                         console.log("Current Inventory:", playerData.inventory);
                     } else {
                         alert(`Your inventory is full!`);

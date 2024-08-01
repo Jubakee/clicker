@@ -1,6 +1,6 @@
 .inventory-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    grid-template-columns: repeat(3, 1fr); /* 4 columns */
     gap: 10px; /* Space between items */
     padding: 20px; /* Padding around the inventory container */
 
